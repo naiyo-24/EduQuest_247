@@ -1,0 +1,9 @@
+{
+  "features": {
+    "claude35SonnetPreview": {
+      "enabled": true,
+      "description": "Enables Claude 3.5 Sonnet (Preview) for all clients",
+      "defaultValue": true
+    }
+  }
+}
