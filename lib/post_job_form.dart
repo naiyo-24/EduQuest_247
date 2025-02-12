@@ -101,7 +101,7 @@ class PostJobFormPageState extends State<PostJobFormPage> with SingleTickerProvi
         ),
         child: TextFormField(
           controller: controller,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             fontSize: 16,
             color: Colors.black87,
           ),
@@ -111,11 +111,11 @@ class PostJobFormPageState extends State<PostJobFormPage> with SingleTickerProvi
               color: const Color(0xFF6A0DAD).withOpacity(0.7),
             ) : null,
             labelText: label,
-            labelStyle: GoogleFonts.poppins(
+            labelStyle: GoogleFonts.openSans(
               color: Colors.grey[600],
               fontSize: 14,
             ),
-            floatingLabelStyle: GoogleFonts.poppins(
+            floatingLabelStyle: GoogleFonts.openSans(
               color: const Color(0xFF6A0DAD),
               fontWeight: FontWeight.w600,
             ),
@@ -151,7 +151,7 @@ class PostJobFormPageState extends State<PostJobFormPage> with SingleTickerProvi
         elevation: 0,
         title: Text(
           'Create New Job Post',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             color: const Color(0xFF6A0DAD),
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -185,7 +185,7 @@ class PostJobFormPageState extends State<PostJobFormPage> with SingleTickerProvi
                 children: [
                   Text(
                     'Job Details',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.openSans(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                       color: const Color(0xFF6A0DAD),
@@ -222,7 +222,7 @@ class PostJobFormPageState extends State<PostJobFormPage> with SingleTickerProvi
                             color: const Color(0xFF6A0DAD).withOpacity(0.7),
                           ),
                           labelText: 'Work Mode',
-                          labelStyle: GoogleFonts.poppins(
+                          labelStyle: GoogleFonts.openSans(
                             color: Colors.grey[600],
                             fontSize: 14,
                           ),
@@ -233,7 +233,7 @@ class PostJobFormPageState extends State<PostJobFormPage> with SingleTickerProvi
                         ),
                         items: ['Remote', 'In-house', 'Hybrid'].map((mode) => DropdownMenuItem(
                           value: mode,
-                          child: Text(mode, style: GoogleFonts.poppins()),
+                          child: Text(mode, style: GoogleFonts.openSans()),
                         )).toList(),
                         onChanged: (value) => setState(() => _mode = value!),
                       ),
@@ -264,7 +264,7 @@ class PostJobFormPageState extends State<PostJobFormPage> with SingleTickerProvi
                         icon: const Icon(Icons.send_rounded),
                         label: Text(
                           'Post Job',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.openSans(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),

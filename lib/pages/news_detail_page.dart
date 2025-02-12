@@ -17,11 +17,10 @@ class NewsDetailPage extends StatelessWidget {
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Color.fromARGB(252, 225, 224, 224),
-                    Color.fromARGB(252, 225, 224, 224),
-                    Color.fromARGB(252, 225, 224, 224),
+                    Colors.white,
+                    Color.fromARGB(255, 135, 206, 235), // Sky blue
                   ],
-                  stops: [0.0, 0.7, 1.0],
+                  stops: [0.0, 1.0],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -53,7 +52,7 @@ class NewsDetailPage extends StatelessWidget {
                                 end: Alignment.bottomCenter,
                                 colors: [
                                   Colors.transparent,
-                                  Colors.black.withOpacity(0.9),
+                                  Colors.transparent, // Remove the dark overlay
                                 ],
                               ),
                             ),
@@ -65,11 +64,11 @@ class NewsDetailPage extends StatelessWidget {
                       icon: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.7),
+                          color: const Color.fromARGB(255, 250, 250, 250).withOpacity(0.7),
                           shape: BoxShape.circle,
                         ),
                         child:
-                            const Icon(Icons.arrow_back, color: Colors.white),
+                            const Icon(Icons.arrow_back, color: Color.fromARGB(255, 14, 77, 150)),
                       ),
                       onPressed: () => Navigator.pop(context),
                     ),
@@ -78,10 +77,10 @@ class NewsDetailPage extends StatelessWidget {
                         icon: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.7),
+                            color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.7),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(Icons.share, color: Colors.white),
+                          child: const Icon(Icons.share, color: Color.fromARGB(255, 14, 77, 150)),
                         ),
                         onPressed: () {
                           Share.share(
@@ -95,7 +94,7 @@ class NewsDetailPage extends StatelessWidget {
                     hasScrollBody: false,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.8),
+                        color: Colors.transparent, // Remove the dark background
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,9 +115,9 @@ class NewsDetailPage extends StatelessWidget {
                                       ),
                                       child: Text(
                                         'Education',
-                                        style: GoogleFonts.poppins(
-                                          color: Colors.white,
-                                          fontSize: 12,
+                                        style: GoogleFonts.openSans(
+                                          color: Colors.black,
+                                          fontSize: 14, // Adjusted text size
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -126,9 +125,9 @@ class NewsDetailPage extends StatelessWidget {
                                     const SizedBox(width: 12),
                                     Text(
                                       'March 15, 2024',
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.white70,
-                                        fontSize: 12,
+                                      style: GoogleFonts.openSans(
+                                        color: Colors.black,
+                                        fontSize: 14, // Adjusted text size
                                       ),
                                     ),
                                   ],
@@ -136,10 +135,10 @@ class NewsDetailPage extends StatelessWidget {
                                 const SizedBox(height: 8),
                                 Text(
                                   article["title"]!,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 24,
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 24, // Adjusted text size
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                     height: 1.3,
                                   ),
                                 ),
@@ -152,8 +151,8 @@ class NewsDetailPage extends StatelessWidget {
                                           Colors.white.withOpacity(0.1),
                                       child: Text(
                                         'EQ',
-                                        style: GoogleFonts.poppins(
-                                          color: Colors.white,
+                                        style: GoogleFonts.openSans(
+                                          color: Colors.black,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -165,17 +164,17 @@ class NewsDetailPage extends StatelessWidget {
                                       children: [
                                         Text(
                                           'EduQuest Team',
-                                          style: GoogleFonts.poppins(
-                                            color: Colors.white,
+                                          style: GoogleFonts.openSans(
+                                            color: Colors.black,
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 14,
+                                            fontSize: 18, // Adjusted text size
                                           ),
                                         ),
                                         Text(
                                           '5 min read',
-                                          style: GoogleFonts.poppins(
-                                            color: Colors.white70,
-                                            fontSize: 12,
+                                          style: GoogleFonts.openSans(
+                                            color: Colors.black54,
+                                            fontSize: 10, // Adjusted text size
                                           ),
                                         ),
                                       ],
@@ -185,10 +184,10 @@ class NewsDetailPage extends StatelessWidget {
                                 const SizedBox(height: 8),
                                 Text(
                                   article["description"]!,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 18, // Adjusted text size
                                     height: 1.8,
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                 ),
                               ],
@@ -205,19 +204,20 @@ class NewsDetailPage extends StatelessWidget {
           ElevatedButton.icon(
             onPressed: () {},
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black,
+              backgroundColor: const Color.fromARGB(255, 253, 253, 253),
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero,
               ),
               minimumSize: const Size(double.infinity, 50),
             ),
-            icon: const Icon(Icons.bookmark_border, color: Colors.white),
+            icon: const Icon(Icons.bookmark_border, color: Color.fromARGB(255, 14, 77, 150)),
             label: Text(
               'Save for later',
-              style: GoogleFonts.poppins(
-                color: Colors.white,
+              style: GoogleFonts.openSans(
+                color: Colors.black,
                 fontWeight: FontWeight.w600,
+                fontSize: 16, // Adjusted text size
               ),
             ),
           ),

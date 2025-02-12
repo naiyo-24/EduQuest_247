@@ -42,7 +42,7 @@ class _MSITPageState extends State<MSITPage> {
           elevation: 0,
           title: Text(
             'MSIT',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               color: Colors.black,
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -119,7 +119,7 @@ class _MSITPageState extends State<MSITPage> {
                 Expanded(
                   child: Text(
                     'Meghnad Saha Institute of Technology',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.openSans(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: const Color.fromARGB(255, 0, 0, 0),
@@ -154,7 +154,7 @@ class _MSITPageState extends State<MSITPage> {
         children: [
           Text(
             'About Meghnad Saha Institute of Technology',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               fontSize: 22,
               fontWeight: FontWeight.bold,
               color: Colors.black,
@@ -165,7 +165,7 @@ class _MSITPageState extends State<MSITPage> {
             'Meghnad Saha Institute of Technology (MSIT) is a premier engineering and management institute located in Kolkata, India. '
             'MSIT offers a range of undergraduate and postgraduate programs in engineering, management, and computer applications. '
             'The institute is known for its excellent faculty, state-of-the-art infrastructure, and strong industry connections.',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               fontSize: 16,
               color: Colors.black,
               height: 1.5,
@@ -199,7 +199,7 @@ class _MSITPageState extends State<MSITPage> {
                 Expanded(
                   child: Text(
                     'WANT AN ADMISSION IN MSIT?',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.openSans(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: const Color.fromARGB(255, 0, 0, 0),
@@ -224,7 +224,7 @@ class _MSITPageState extends State<MSITPage> {
           children: [
             Text(
               'Admission Enquiry',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.openSans(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
@@ -280,7 +280,7 @@ class _MSITPageState extends State<MSITPage> {
             const SizedBox(width: 12),
             Text(
               'Submit Application',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.openSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
@@ -341,7 +341,7 @@ class _MSITPageState extends State<MSITPage> {
         children: [
           Text(
             label,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: Colors.black87,

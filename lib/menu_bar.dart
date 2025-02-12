@@ -135,7 +135,7 @@ class _StylishPageState extends State<StylishPage> with SingleTickerProviderStat
                 child: Text(
                   "Explore the Menu",
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.openSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
@@ -205,7 +205,7 @@ class _StylishPageState extends State<StylishPage> with SingleTickerProviderStat
             ),
             title: Text(
               item.title ?? 'Untitled',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.openSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
@@ -247,7 +247,7 @@ class _StylishPageState extends State<StylishPage> with SingleTickerProviderStat
             const SizedBox(height: 24),
             Text(
               title,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.openSans(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -256,7 +256,7 @@ class _StylishPageState extends State<StylishPage> with SingleTickerProviderStat
             const SizedBox(height: 12),
             Text(
               description,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.openSans(
                 fontSize: 16,
                 color: Colors.white.withOpacity(0.7),
               ),
@@ -270,7 +270,7 @@ class _StylishPageState extends State<StylishPage> with SingleTickerProviderStat
                 style: AppTheme.buttonStyle,
                 child: Text(
                   'Close',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.openSans(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),

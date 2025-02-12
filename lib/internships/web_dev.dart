@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'internship_form.dart';
+import 'package:eduquest247/components/standard_app_bar.dart';
 
 class WebDevelopmentPage extends StatelessWidget {
   const WebDevelopmentPage({super.key});
@@ -8,26 +9,7 @@ class WebDevelopmentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Web Development Internship',
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontWeight: FontWeight.w600,
-            fontSize: 16,
-          ),
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color.fromARGB(255, 135, 206, 235), Colors.white],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-      ),
+      appBar: const StandardAppBar(color: Color.fromARGB(255, 255, 255, 255)),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(

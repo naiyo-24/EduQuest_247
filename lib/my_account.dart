@@ -1,4 +1,3 @@
-import 'package:eduquest247/chat_boat.dart';
 import 'package:get/get.dart';
 
 import 'menu_bar.dart'; // Import MenuBar
@@ -20,8 +19,20 @@ class CustomStaticAppBar extends StatelessWidget implements PreferredSizeWidget 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color.fromARGB(255, 255, 254, 254),
-      title: Text(title, style: GoogleFonts.poppins(color: Colors.white)),
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Color.fromARGB(255, 135, 206, 235),
+              Color.fromARGB(255, 135, 206, 235),
+            ],
+          ),
+        ),
+      ),
+      title: Text(title, style: GoogleFonts.openSans(color: Colors.black)),
       actions: actions,
       elevation: 0,
     );
@@ -29,12 +40,6 @@ class CustomStaticAppBar extends StatelessWidget implements PreferredSizeWidget 
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
-
-
-
-void main() async {
-  // Add this line before your app starts
 }
 
 class MyAccountPage extends StatelessWidget {
@@ -48,13 +53,12 @@ class MyAccountPage extends StatelessWidget {
     final availableHeight = screenHeight - appBarHeight - statusBarHeight;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 135, 206, 235), // Sky blue color
       appBar: CustomStaticAppBar(
-        title: 'My Profile',
+        title: 'My Account',
         actions: [
           _buildActionIcon(
-            Icons.arrow_back_ios_new_rounded,
-            () => Get.back(),
+            Icons.settings,
+            () => Get.to(() => const SettingsPage()),
             color: Colors.black,
           ),
           const SizedBox(width: 2),
@@ -66,69 +70,43 @@ class MyAccountPage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.white, Color.fromARGB(255, 135, 206, 235), Color.fromARGB(255, 135, 206, 235)],
+            colors: [
+              Colors.white,
+              Color.fromARGB(255, 135, 206, 235),
+              Color.fromARGB(255, 135, 206, 235),
+            ],
           ),
         ),
         child: ListView(
           children: [
-            // Add Profile Picture Section
+            // Profile Picture Section
             Container(
               padding: const EdgeInsets.symmetric(vertical: 32),
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 135, 206, 235),
+              ),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  Stack(
+                    alignment: Alignment.bottomRight,
                     children: [
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.black, width: 2),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 20,
-                              spreadRadius: 5,
-                            ),
-                          ],
-                        ),
-                        child: ClipOval(
-                          child: Image.asset(
-                            'assets/images/profile.jpeg', // Local asset image path
-                            width: 120,
-                            height: 120,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(
-                                Icons.person,
-                                size: 60,
-                                color: Colors.black,
-                              );
-                            },
-                          ),
-                        ),
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundImage: AssetImage('assets/images/profile.jpeg'),
+                        backgroundColor: Colors.transparent,
                       ),
-                      const SizedBox(width: 16),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.black, width: 2),
-                        ),
-                        child: const Icon(
-                          Icons.edit,
-                          color: Colors.black,
-                          size: 20,
-                        ),
+                      IconButton(
+                        icon: Icon(Icons.edit, color: Color.fromARGB(255, 14, 77, 150)),
+                        onPressed: () {
+                          // Handle profile picture edit
+                        },
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
                   Text(
                     'Rajdeep Dey', // Replace with actual user name
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.openSans(
                       color: Colors.black,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -136,7 +114,7 @@ class MyAccountPage extends StatelessWidget {
                   ),
                   Text(
                     'deyrajdeep201@gmail.com', // Replace with actual user email
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.openSans(
                       color: Colors.grey[800],
                       fontSize: 16,
                     ),
@@ -147,7 +125,7 @@ class MyAccountPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Color.fromARGB(255, 135, 206, 235),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.3),
@@ -168,11 +146,19 @@ class MyAccountPage extends StatelessWidget {
                   ),
                   _buildProfileOption(
                     options: {
-                      'icon': Icons.settings_outlined,
-                      'title': 'Settings',
-                      'subtitle': 'App preferences and more',
-                      'onTap': () => Get.to(() =>
-                          const StylishPage()), // Changed from Navigator.pushNamed
+                      'icon': Icons.update_rounded,
+                      'title': 'Updates & Notifications',
+                      'subtitle': 'Track Your Applications',
+                      'onTap': () {},
+                    },
+                  ),
+                  _buildProfileOption(
+                    options: {
+                      'icon': Icons.file_copy_rounded,
+                      'title': 'My Documents',
+                      'subtitle': 'Upload and Edit your documents',
+                      'onTap': () {},
+                      'color': Color.fromARGB(255, 14, 77, 150),
                     },
                   ),
                   _buildProfileOption(
@@ -198,14 +184,7 @@ class MyAccountPage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const ChatbotScreen()),
-        ),
-        backgroundColor: Colors.black,
-        child: const Icon(Icons.chat, color: Colors.white),
-      ),
+  
     );
   }
 
@@ -219,8 +198,7 @@ class MyAccountPage extends StatelessWidget {
         border: Border.all(color: Colors.black.withOpacity(0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
+            color: const Color.fromARGB(255, 253, 252, 252),
             offset: const Offset(0, 4),
           ),
         ],
@@ -237,12 +215,12 @@ class MyAccountPage extends StatelessWidget {
           ),
           child: Icon(
             options['icon'],
-            color: isLogout ? Colors.red : Colors.black,
+            color: isLogout ? Colors.red : Color.fromARGB(255, 14, 77, 150),
           ),
         ),
         title: Text(
           options['title'],
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             color: isLogout ? Colors.red : Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -250,7 +228,7 @@ class MyAccountPage extends StatelessWidget {
         ),
         subtitle: Text(
           options['subtitle'],
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             color: Colors.grey[800],
             fontSize: 12,
           ),
@@ -286,18 +264,145 @@ class PersonalInfoForm extends StatefulWidget {
   State<PersonalInfoForm> createState() => _PersonalInfoFormState();
 }
 
-class _PersonalInfoFormState extends State<PersonalInfoForm> {
+class _PersonalInfoFormState extends State<PersonalInfoForm>
+    with SingleTickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  Widget _buildTextField(String label, IconData icon, {int maxLines = 1}) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 4, bottom: 8),
+              child: Text(
+                label,
+                style: GoogleFonts.openSans(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[50],
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: TextFormField(
+                maxLines: maxLines,
+                style: GoogleFonts.openSans(
+                  fontSize: 15,
+                  color: Colors.black87,
+                ),
+                decoration: InputDecoration(
+                  prefixIcon: Container(
+                    padding: const EdgeInsets.all(12),
+                    child: Icon(icon, color: Colors.black54, size: 22),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(color: Colors.grey[200]!),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(color: Colors.grey[200]!),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide:
+                        const BorderSide(color: Color.fromARGB(255, 254, 253, 253), width: 1.5),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[50],
+                  contentPadding: const EdgeInsets.all(8),
+                ),
+                validator: (value) =>
+                    value?.isEmpty ?? true ? '${label} is required' : null,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return Center(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 0, 0, 0),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const CircularProgressIndicator(),
+            ),
+          );
+        },
+      );
+
+      // Simulate API call with delay
+      Future.delayed(const Duration(seconds: 1), () {
+        Navigator.pop(context); // Remove loading indicator
+
+        Get.snackbar(
+          'Success',
+          'Profile updated successfully',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: const Color(0xFF1872db),
+          colorText: Colors.white,
+          margin: const EdgeInsets.all(16),
+          borderRadius: 16,
+          duration: const Duration(seconds: 3),
+        );
+
+        // Direct navigation to MyAccountPage
+        Future.delayed(const Duration(seconds: 1), () {
+          Get.off(() => MyAccountPage());
+        });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color.fromARGB(255, 249, 249, 249),
       appBar: CustomStaticAppBar(
         title: 'Edit Profile',
         actions: [
           IconButton(
-            icon: const Icon(Icons.check, color: Colors.white),
+            icon: const Icon(Icons.check, color: Color.fromARGB(255, 4, 4, 4)),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 // Save form data
@@ -312,7 +417,7 @@ class _PersonalInfoFormState extends State<PersonalInfoForm> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.white, Color.fromARGB(255, 0, 0, 0), Colors.black],
+            colors: [Color.fromARGB(255, 249, 249, 249), Color.fromARGB(255, 135, 206, 235), Color.fromARGB(255, 135, 206, 235)],
             stops: [0.0, 0.7, 1.0],
           ),
         ),
@@ -321,39 +426,19 @@ class _PersonalInfoFormState extends State<PersonalInfoForm> {
           child: ListView(
             padding: const EdgeInsets.all(24),
             children: [
-              _buildFormField(
-                label: 'Full Name',
-                icon: Icons.person,
-                initialValue: 'John Doe',
-              ),
-              _buildFormField(
-                label: 'Phone Number',
-                icon: Icons.phone,
-                initialValue: '+1 234 567 890',
-                keyboardType: TextInputType.phone,
-              ),
-              _buildFormField(
-                label: 'Email',
-                icon: Icons.email,
-                initialValue: 'john.doe@example.com',
-                keyboardType: TextInputType.emailAddress,
-              ),
-              _buildFormField(
-                label: 'Password',
-                icon: Icons.lock,
-                isPassword: true,
-                initialValue: '********',
-              ),
-              _buildFormField(
-                label: 'College',
-                icon: Icons.school,
-                initialValue: 'University Name',
-              ),
-              _buildFormField(
-                label: 'Degree',
-                icon: Icons.history_edu,
-                initialValue: 'Bachelor of Technology',
-              ),
+              const SizedBox(height: 32),
+              _buildFormSection('Personal Information', [
+                _buildTextField('Full Name', Icons.person_outline),
+                _buildTextField('Phone Number', Icons.phone_outlined),
+                _buildTextField('Email Address', Icons.email_outlined),
+              ]),
+              _buildDivider(),
+              _buildFormSection('Academic Details', [
+                _buildTextField('College/University', Icons.school_outlined),
+                _buildTextField('Degree', Icons.history_edu),
+              ]),
+              const SizedBox(height: 32),
+              _buildSubmitButton(),
             ],
           ),
         ),
@@ -361,38 +446,93 @@ class _PersonalInfoFormState extends State<PersonalInfoForm> {
     );
   }
 
-  Widget _buildFormField({
-    required String label,
-    required IconData icon,
-    required String initialValue,
-    bool isPassword = false,
-    TextInputType? keyboardType,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
-      ),
-      child: TextFormField(
-        initialValue: initialValue,
-        obscureText: isPassword,
-        keyboardType: keyboardType,
-        style: GoogleFonts.poppins(color: Colors.white),
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: GoogleFonts.poppins(color: Colors.grey[400]),
-          prefixIcon: Icon(icon, color: Colors.grey[400]),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.all(20),
+  Widget _buildFormSection(String title, List<Widget> fields) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.openSans(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
         ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter $label';
-          }
-          return null;
-        },
+        const SizedBox(height: 16),
+        ...fields,
+      ],
+    );
+  }
+
+  Widget _buildDivider() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      child: Container(
+        height: 1,
+        color: Colors.grey[200],
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Container(
+        width: double.infinity,
+        height: 56,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 255, 255, 255), // Submit button color
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: ElevatedButton(
+          onPressed: _submitForm,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Save Changes',
+                style: GoogleFonts.openSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black, // Submit button text color
+                  letterSpacing: 0.5,
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Icon(
+                Icons.arrow_forward,
+                size: 20,
+                color: Colors.black, // Submit button icon color
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CustomStaticAppBar(
+        title: 'Settings',
+      ),
+      body: Center(
+        child: Text(
+          'Settings Page',
+          style: GoogleFonts.openSans(fontSize: 24, color: Colors.black),
+        ),
       ),
     );
   }

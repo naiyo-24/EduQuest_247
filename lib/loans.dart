@@ -117,9 +117,9 @@ class LoanPage extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.only(top: 6, bottom: 12),
                         child: Text(
-                          'Available Loan Options',
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
+                          'Available Educational Loan Options',
+                          style: GoogleFonts.openSans(
+                            fontSize: 22,
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
                             letterSpacing: 0.5,
@@ -185,16 +185,16 @@ class LoanPage extends StatelessWidget {
                       children: [
                         Text(
                           bankName,
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.openSans(
                             color: Colors.black87,
-                            fontSize: 18,
+                            fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'Interest: $interestRate | Amount: Up to $amount',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.openSans(
                             color: Colors.grey[600],
                             fontSize: 14,
                           ),
@@ -248,17 +248,17 @@ class ApplyFormDialog extends StatelessWidget {
               children: [
                 Text(
                   'Apply for Loan',
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.openSans(
                     fontSize: 28,
                     fontWeight: FontWeight.w600,
-                    color: const Color.fromARGB(255, 0, 0, 0),
+                    color: const Color(0xFF1872db),
                   ),
                 ),
                 Text(
                   bankName,
-                  style: GoogleFonts.poppins(
+                  style: GoogleFonts.openSans(
                     fontSize: 18,
-                    color: Colors.grey[600],
+                    color: Color.fromARGB(255, 91, 166, 252),
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -274,6 +274,7 @@ class ApplyFormDialog extends StatelessWidget {
                         'Cancel',
                         onPressed: () => Navigator.pop(context),
                         isOutlined: true,
+                        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -287,14 +288,14 @@ class ApplyFormDialog extends StatelessWidget {
                             'Loan application submitted successfully',
                             snackPosition: SnackPosition.TOP,
                             backgroundColor: Color.fromARGB(255, 135, 206, 235),
-                            colorText: const Color.fromARGB(255, 0, 0, 0),
+                            colorText: const Color.fromARGB(255, 255, 255, 255),
                             margin: const EdgeInsets.all(16),
                             borderRadius: 16,
                             duration: const Duration(seconds: 3),
                             icon: const Icon(Icons.check_circle,
-                                color: Color.fromARGB(255, 0, 0, 0)),
+                                color: Color.fromARGB(255, 255, 255, 255)),
                           );
-                        },
+                        }, backgroundColor: Color(0xFF1872db),
                       ),
                     ),
                   ],
@@ -308,7 +309,7 @@ class ApplyFormDialog extends StatelessWidget {
   }
 
   Widget _buildDialogButton(String text,
-      {required VoidCallback onPressed, bool isOutlined = false}) {
+      {required VoidCallback onPressed, bool isOutlined = false, required Color backgroundColor}) {
     return ElevatedButton(
       onPressed: () {
         if (!isOutlined) {
@@ -318,7 +319,7 @@ class ApplyFormDialog extends StatelessWidget {
             'Success!',
             'Loan application submitted successfully',
             snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.black,
+            backgroundColor: Color(0xFF1872db),
             colorText: Colors.white,
             margin: const EdgeInsets.all(16),
             borderRadius: 16,
@@ -331,21 +332,21 @@ class ApplyFormDialog extends StatelessWidget {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor:
-            isOutlined ? Colors.white : const Color.fromARGB(255, 0, 0, 0),
+            isOutlined ? Colors.white : const Color(0xFF1872db),
         foregroundColor:
-            isOutlined ? const Color.fromARGB(255, 0, 0, 0) : Colors.white,
+            isOutlined ? Colors.red : Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: isOutlined
-              ? const BorderSide(color: Color.fromARGB(255, 1, 0, 1))
+              ? const BorderSide(color: Color.fromARGB(255, 219, 27, 24))
               : BorderSide.none,
         ),
         elevation: isOutlined ? 0 : 2,
       ),
       child: Text(
         text,
-        style: GoogleFonts.poppins(
+        style: GoogleFonts.openSans(
           fontWeight: FontWeight.w600,
           fontSize: 16,
         ),
@@ -369,9 +370,9 @@ class ApplyFormDialog extends StatelessWidget {
       ),
       child: TextField(
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: const Color.fromARGB(255, 135, 206, 235)),
+          prefixIcon: Icon(icon, color: const Color(0xFF1872db)),
           labelText: label,
-          labelStyle: GoogleFonts.poppins(color: Colors.grey[600]),
+          labelStyle: GoogleFonts.openSans(color: Colors.grey[600]),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide.none,

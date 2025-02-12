@@ -66,7 +66,7 @@ class FloatingNavButton extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  color: const Color.fromARGB(255, 76, 163, 239), // Blue icons
+                  color: Color(0xFF1872db), // Blue icons
                   size: isSelected ? 28 : 24,
                 ),
                 if (isSelected)
@@ -75,7 +75,7 @@ class FloatingNavButton extends StatelessWidget {
                     width: 6,
                     height: 6,
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 76, 163, 239), // Blue indicator
+                      color: Color(0xFF1872db), // Blue indicator
                       shape: BoxShape.circle,
                     ),
                   ),

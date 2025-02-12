@@ -100,8 +100,8 @@ class ViewAllInternshipsPage extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 6, bottom: 12),
                         child: Text(
                           'Available Internship Programs',
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
+                          style: GoogleFonts.openSans(
+                            fontSize: 22,
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
                             letterSpacing: 0.5,
@@ -166,16 +166,16 @@ class ViewAllInternshipsPage extends StatelessWidget {
                       children: [
                         Text(
                           title,
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.openSans(
                             color: Colors.black87,
-                            fontSize: 18,
+                            fontSize: 20,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           'View Details',
-                          style: GoogleFonts.poppins(
+                          style: GoogleFonts.openSans(
                             color: Colors.grey[600],
                             fontSize: 14,
                           ),

@@ -32,26 +32,26 @@ class StandardAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: 8,
       title: Text(
         'EduQuest247',
-        style: GoogleFonts.jaldi(
-          color: Colors.black,
-          fontSize: 26,
+        style: GoogleFonts.openSans(
+          color: Color(0xFF1872db),
+          fontSize: 22,
           fontWeight: FontWeight.bold,
         ),
       ),
       actions: [
         IconButton(
-          icon: const Icon(Icons.search, color: Colors.black, size: 20),
+          icon: const Icon(Icons.search, color: Color.fromARGB(255, 14, 77, 150), size: 26),
           padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(maxWidth: 32),
+          constraints: const BoxConstraints(maxWidth: 22),
           onPressed: () {
             showSearch(context: context, delegate: CustomSearchDelegate());
           },
         ),
         IconButton(
           icon: const Icon(Icons.business_center_outlined,
-              color: Colors.black, size: 20),
+              color: Color.fromARGB(255, 14, 77, 150), size: 26),
           padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(maxWidth: 32),
+          constraints: const BoxConstraints(maxWidth: 22),
           onPressed: () => Get.to(
             () => HRLoginPage(),
             transition: Transition.fadeIn,
@@ -59,9 +59,9 @@ class StandardAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.person_outline, color: Colors.black, size: 20),
+          icon: const Icon(Icons.person_outline, color: Color.fromARGB(255, 14, 77, 150), size: 26),
           padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(maxWidth: 32),
+          constraints: const BoxConstraints(maxWidth: 22),
           onPressed: () => Get.to(
             () => const MyAccountPage(),
             transition: Transition.fadeIn,
@@ -83,15 +83,15 @@ class CustomSearchDelegate extends SearchDelegate<String> {
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.white,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black87),
-        titleTextStyle: GoogleFonts.jaldi(
-          color: Colors.black87,
+        iconTheme: const IconThemeData(color: Color(0xFF1872db)),
+        titleTextStyle: GoogleFonts.openSans(
+          color: Color(0xFF1872db),
           fontSize: 20,
           fontWeight: FontWeight.w500,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
-        hintStyle: GoogleFonts.jaldi(
+        hintStyle: GoogleFonts.openSans(
           color: const Color.fromARGB(255, 0, 0, 0),
           fontSize: 18,
         ),
@@ -130,7 +130,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
       child: Center(
         child: Text(
           'No results found for "$query"',
-          style: GoogleFonts.jaldi(
+          style: GoogleFonts.openSans(
             color: const Color.fromARGB(255, 0, 0, 0),
             fontSize: 16,
           ),
@@ -151,7 +151,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
             leading: const Icon(Icons.history, color: Colors.grey),
             title: Text(
               'Suggestion $index',
-              style: GoogleFonts.jaldi(
+              style: GoogleFonts.openSans(
                 color: Colors.black87,
                 fontSize: 16,
               ),
@@ -175,16 +175,16 @@ class AppBarDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<int>(
-      icon: const Icon(Icons.more_vert, color: Colors.black),
+      icon: const Icon(Icons.more_vert, color: Color(0xFF1872db)),
       color: Colors.white.withOpacity(0.9), // Transparent white background
       itemBuilder: (context) => [
         PopupMenuItem(
           value: 1,
           child: Row(
             children: [
-              const Icon(Icons.notifications, color: Color(0xFF87CEEB)), // Sky blue icon
+              const Icon(Icons.notifications, color: Color(0xFF1872db)), // Sky blue icon
               const SizedBox(width: 8),
-              Text('Notifications', style: GoogleFonts.poppins(color: Colors.black)),
+              Text('Notifications', style: GoogleFonts.openSans(color: Colors.black)),
             ],
           ),
         ),
@@ -192,9 +192,9 @@ class AppBarDropdown extends StatelessWidget {
           value: 2,
           child: Row(
             children: [
-              const Icon(Icons.account_circle, color: Color(0xFF87CEEB)), // Sky blue icon
+              const Icon(Icons.account_circle, color: Color(0xFF1872db)), // Sky blue icon
               const SizedBox(width: 8),
-              Text('My Account', style: GoogleFonts.poppins(color: Colors.black)),
+              Text('My Account', style: GoogleFonts.openSans(color: Colors.black)),
             ],
           ),
         ),
@@ -202,9 +202,9 @@ class AppBarDropdown extends StatelessWidget {
           value: 3,
           child: Row(
             children: [
-              const Icon(Icons.school, color: Color(0xFF87CEEB)), // Sky blue icon
+              const Icon(Icons.school, color: Color(0xFF1872db)), // Sky blue icon
               const SizedBox(width: 8),
-              Text('Scholarship', style: GoogleFonts.poppins(color: Colors.black)),
+              Text('Scholarship', style: GoogleFonts.openSans(color: Colors.black)),
             ],
           ),
         ),
@@ -212,9 +212,9 @@ class AppBarDropdown extends StatelessWidget {
           value: 4,
           child: Row(
             children: [
-              const Icon(Icons.list, color: Color(0xFF87CEEB)), // Sky blue icon
+              const Icon(Icons.list, color: Color(0xFF1872db)), // Sky blue icon
               const SizedBox(width: 8),
-              Text('All Colleges', style: GoogleFonts.poppins(color: Colors.black)),
+              Text('All Colleges', style: GoogleFonts.openSans(color: Colors.black)),
             ],
           ),
         ),
@@ -222,9 +222,9 @@ class AppBarDropdown extends StatelessWidget {
           value: 5,
           child: Row(
             children: [
-              const Icon(Icons.logout, color: Color(0xFF87CEEB)), // Sky blue icon
+              const Icon(Icons.logout, color: Color(0xFF1872db)), // Sky blue icon
               const SizedBox(width: 8),
-              Text('Logout', style: GoogleFonts.poppins(color: Colors.black)),
+              Text('Logout', style: GoogleFonts.openSans(color: Colors.black)),
             ],
           ),
         ),

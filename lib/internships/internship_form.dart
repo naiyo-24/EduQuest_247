@@ -53,7 +53,7 @@ class _InternshipApplicationFormState extends State<InternshipApplicationForm>
               padding: const EdgeInsets.only(left: 4, bottom: 8),
               child: Text(
                 label,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.openSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
@@ -74,7 +74,7 @@ class _InternshipApplicationFormState extends State<InternshipApplicationForm>
               ),
               child: TextFormField(
                 maxLines: maxLines,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.openSans(
                   fontSize: 15,
                   color: Colors.black87,
                 ),
@@ -138,15 +138,15 @@ class _InternshipApplicationFormState extends State<InternshipApplicationForm>
           'Success',
           'Internship application submitted successfully',
           snackPosition: SnackPosition.TOP,
-          backgroundColor: const Color.fromARGB(255, 61, 76, 217),
+          backgroundColor: const Color(0xFF1872db),
           colorText: Colors.white,
           margin: const EdgeInsets.all(16),
           borderRadius: 16,
-          duration: const Duration(seconds: 2),
+          duration: const Duration(seconds: 3),
         );
 
         // Direct navigation to ViewAllInternshipsPage
-        Future.delayed(const Duration(seconds: 2), () {
+        Future.delayed(const Duration(seconds: 1), () {
           Get.off(() => ViewAllInternshipsPage());
         });
       });
@@ -204,12 +204,12 @@ class _InternshipApplicationFormState extends State<InternshipApplicationForm>
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 135, 206, 235), // Header box color
+        color: const Color.fromARGB(255, 184, 227, 244), // Header box color
         borderRadius: BorderRadius.circular(16),
       ),
       child: Text(
-        'Apply for ${widget.internshipType}',
-        style: GoogleFonts.poppins(
+        'Apply for ${widget.internshipType} Internship',
+        style: GoogleFonts.openSans(
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: Color.fromARGB(255, 0, 0, 0), // Header text color
@@ -225,7 +225,7 @@ class _InternshipApplicationFormState extends State<InternshipApplicationForm>
       children: [
         Text(
           title,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             fontSize: 18,
             fontWeight: FontWeight.w600,
             color: Colors.black87,
@@ -278,7 +278,7 @@ class _InternshipApplicationFormState extends State<InternshipApplicationForm>
             children: [
               Text(
                 'Submit Application',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.openSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.black, // Submit button text color

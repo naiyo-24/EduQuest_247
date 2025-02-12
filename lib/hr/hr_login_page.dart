@@ -46,7 +46,7 @@ class HRLoginPage extends StatelessWidget {
                   children: [
                     Text(
                       'HR Manager Login',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.openSans(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -55,7 +55,7 @@ class HRLoginPage extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       'Login to post and manage job listings',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.openSans(
                         fontSize: 16,
                         color: Colors.black,
                       ),
@@ -121,7 +121,7 @@ class HRLoginPage extends StatelessWidget {
         validator: validator,
         decoration: InputDecoration(
           hintText: label,
-          hintStyle: GoogleFonts.poppins(color: Colors.grey[400]),
+          hintStyle: GoogleFonts.openSans(color: Colors.grey[400]),
           floatingLabelBehavior: FloatingLabelBehavior.never,
           prefixIcon: Icon(icon, color: Colors.black87),
           border: OutlineInputBorder(
@@ -172,7 +172,7 @@ class HRLoginPage extends StatelessWidget {
         ),
         child: Text(
           'Login',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             fontSize: 16,
             fontWeight: FontWeight.w600,
             color: Colors.black,

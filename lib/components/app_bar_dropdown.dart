@@ -19,25 +19,27 @@ class AppBarDropdown extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
           elevation: 8,
-          color: Colors.black,
+          color: const Color.fromARGB(255, 211, 213, 220),
         ),
       ),
       child: PopupMenuButton<String>(
         icon: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-          ),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              const Icon(
-                Icons.grid_view_rounded,
-                color: Color.fromARGB(255, 0, 0, 0),
-                size: 18,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: Offset(0, 4),
               ),
             ],
+          ),
+          child: const Icon(
+            Icons.grid_view_rounded,
+            color: Color.fromARGB(255, 14, 77, 150),
+            size: 26,
           ),
         ),
         offset: const Offset(0, 50),
@@ -113,13 +115,20 @@ class AppBarDropdown extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 10,
+                    offset: Offset(0, 4),
+                  ),
+                ],
               ),
               child: Icon(
                 icon,
                 size: 22,
-                color: Colors.white,
+                color: Color(0xFF1872db),
               ),
             ),
             const SizedBox(width: 16),
@@ -129,16 +138,16 @@ class AppBarDropdown extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
+                    style: GoogleFonts.openSans(
+                      color: Colors.black,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                   Text(
                     subtitle,
-                    style: GoogleFonts.poppins(
-                      color: Colors.white70,
+                    style: GoogleFonts.openSans(
+                      color: Colors.black.withOpacity(0.7),
                       fontSize: 12,
                     ),
                   ),

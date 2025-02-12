@@ -1,7 +1,7 @@
 import 'package:eduquest247/route/route_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:eduquest247/pages/login.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});
@@ -68,20 +68,18 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Reset Password',
-                        style: TextStyle(
-                          fontFamily: 'Jaldi',
+                        style: GoogleFonts.openSans(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
                           color: Colors.black, // Changed to black
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
+                      Text(
                         'Enter your new password',
-                        style: TextStyle(
-                          fontFamily: 'Jaldi',
+                        style: GoogleFonts.openSans(
                           fontSize: 16,
                           color: Colors.black, // Changed to black
                         ),

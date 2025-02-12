@@ -91,7 +91,7 @@ class RecommendedCardList extends StatelessWidget {
                         item.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.jaldi(
+                        style: GoogleFonts.openSans(
                           color: Colors.white, // White text
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
@@ -121,7 +121,7 @@ class RecommendedCardList extends StatelessWidget {
                           // Price
                           Text(
                             '₹${item.price.toStringAsFixed(2)}',
-                            style: GoogleFonts.jaldi(
+                            style: GoogleFonts.openSans(
                               color: Colors.white, // White text
                               fontSize: 26,
                               fontWeight: FontWeight.bold,

@@ -111,7 +111,7 @@ class NotificationsPage extends StatelessWidget {
                     children: [
                       Text(
                         'Important Update!',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.openSans(
                           color: const Color.fromARGB(255, 0, 0, 0),
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -120,7 +120,7 @@ class NotificationsPage extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         'Your loan application has been approved',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.openSans(
                           color: const Color.fromARGB(255, 0, 0, 0)
                               .withOpacity(0.9),
                           fontSize: 14,
@@ -129,7 +129,7 @@ class NotificationsPage extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         '2 minutes ago',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.openSans(
                           color: const Color.fromARGB(255, 0, 0, 0)
                               .withOpacity(0.7),
                           fontSize: 12,
@@ -192,7 +192,7 @@ class NotificationsPage extends StatelessWidget {
                         children: [
                           Text(
                             'Internship Available',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.openSans(
                               color: const Color.fromARGB(255, 0, 0, 0),
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -215,7 +215,7 @@ class NotificationsPage extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         'Software Development at Tech Corp',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.openSans(
                           color: const Color.fromARGB(255, 0, 0, 0)
                               .withOpacity(0.9),
                           fontSize: 14,
@@ -224,7 +224,7 @@ class NotificationsPage extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         '1 hour ago',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.openSans(
                           color: const Color.fromARGB(255, 0, 0, 0)
                               .withOpacity(0.7),
                           fontSize: 12,
@@ -285,7 +285,7 @@ class NotificationsPage extends StatelessWidget {
                     children: [
                       Text(
                         'Regular Update',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.openSans(
                           color: const Color.fromARGB(
                               255, 0, 0, 0), // Changed from Color(0xFF333333)
                           fontSize: 16,
@@ -295,7 +295,7 @@ class NotificationsPage extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         'Check out our latest features and updates',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.openSans(
                           color: const Color.fromARGB(255, 0, 0, 0)
                               .withOpacity(0.7), // Changed from grey
                           fontSize: 14,
@@ -304,7 +304,7 @@ class NotificationsPage extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         '2 days ago',
-                        style: GoogleFonts.poppins(
+                        style: GoogleFonts.openSans(
                           color: const Color.fromARGB(255, 5, 5, 5),
                           fontSize: 12,
                         ),

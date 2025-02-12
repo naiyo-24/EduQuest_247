@@ -54,7 +54,7 @@ class _JobApplicationFormState extends State<JobApplicationForm>
               padding: const EdgeInsets.only(left: 4, bottom: 8),
               child: Text(
                 label,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.openSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
@@ -75,7 +75,7 @@ class _JobApplicationFormState extends State<JobApplicationForm>
               ),
               child: TextFormField(
                 maxLines: maxLines,
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.openSans(
                   fontSize: 15,
                   color: Colors.black87,
                 ),
@@ -166,7 +166,7 @@ class _JobApplicationFormState extends State<JobApplicationForm>
         ),
         title: Text(
           'Job Application',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -223,7 +223,7 @@ class _JobApplicationFormState extends State<JobApplicationForm>
       children: [
         Text(
           '${widget.jobTitle} at ${widget.companyName}',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.black,
@@ -233,7 +233,7 @@ class _JobApplicationFormState extends State<JobApplicationForm>
         const SizedBox(height: 8),
         Text(
           'Please fill in your details below',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             fontSize: 15,
             color: Colors.grey[600],
           ),
@@ -248,7 +248,7 @@ class _JobApplicationFormState extends State<JobApplicationForm>
       children: [
         Text(
           title,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             fontSize: 18,
             fontWeight: FontWeight.w600,
             color: Colors.black87,
@@ -305,7 +305,7 @@ class _JobApplicationFormState extends State<JobApplicationForm>
             children: [
               Text(
                 'Submit Application',
-                style: GoogleFonts.poppins(
+                style: GoogleFonts.openSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,

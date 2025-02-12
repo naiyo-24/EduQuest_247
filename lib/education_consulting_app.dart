@@ -58,7 +58,7 @@ class EducationConsultingApp extends StatelessWidget {
           children: [
             Text(
               'Hi [Name],',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.openSans(
                 color: const Color(0xFF333333), // Charcoal Gray
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -66,7 +66,7 @@ class EducationConsultingApp extends StatelessWidget {
             ),
             Text(
               'Ready to achieve your goals today?',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.openSans(
                 color: const Color(0xFF333333), // Charcoal Gray
                 fontSize: 16,
               ),
@@ -122,7 +122,7 @@ class EducationConsultingApp extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             title,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               color: Colors.black,
               fontSize: 14,
               fontWeight: FontWeight.bold,
@@ -139,7 +139,7 @@ class EducationConsultingApp extends StatelessWidget {
       children: [
         Text(
           'Your Progress',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             color: const Color(0xFF333333), // Charcoal Gray
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -162,7 +162,7 @@ class EducationConsultingApp extends StatelessWidget {
       children: [
         Text(
           'Featured Updates',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             color: const Color(0xFF333333), // Charcoal Gray
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -180,7 +180,7 @@ class EducationConsultingApp extends StatelessWidget {
       children: [
         Text(
           'Internship Finder',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             color: const Color(0xFF333333), // Charcoal Gray
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -198,7 +198,7 @@ class EducationConsultingApp extends StatelessWidget {
       children: [
         Text(
           'Loan Assistance',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             color: const Color(0xFF333333), // Charcoal Gray
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -216,7 +216,7 @@ class EducationConsultingApp extends StatelessWidget {
       children: [
         Text(
           'Career Guidance',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             color: const Color(0xFF333333), // Charcoal Gray
             fontSize: 18,
             fontWeight: FontWeight.bold,

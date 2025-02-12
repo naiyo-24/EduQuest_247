@@ -3,13 +3,14 @@ import 'package:eduquest247/route/route_generator.dart';
 import 'package:eduquest247/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   void _handleLogin() {
     // Add login validation here if needed
-    Get.offNamed('/home'); // Changed to use offNamed
+    Get.offNamed('/home');
   }
 
   @override
@@ -28,136 +29,64 @@ class LoginPage extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height -
-                    MediaQuery.of(context).padding.top,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24.0, vertical: 16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Welcome Back!',
-                      style: TextStyle(
-                        fontFamily: 'Jaldi',
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black, // Changed to black
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Login to continue your learning journey',
-                      style: TextStyle(
-                        fontFamily: 'Jaldi',
-                        fontSize: 16,
-                        color: Colors.black, // Changed to black
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white, // Changed to white
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildTextField(
-                              'Email or Phone', Icons.email_outlined),
-                          const SizedBox(height: 12),
-                          _buildTextField('Password', Icons.lock_outline,
-                              obscureText: true),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: TextButton(
-                              onPressed: () {
-                                Get.to(() => const ForgetPasswordPage(),
-                                    transition: Transition.rightToLeft);
-                              },
-                              child: const Text(
-                                'Forgot Password?',
-                                style: TextStyle(
-                                    color: Colors.black), // Changed to black
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              onPressed: _handleLogin,
-                              child: const Text(
-                                'Login',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black, // Changed to black
-                                ),
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Get.to(() =>
-                                  const SignUpPage()); // Changed from Navigator.pushNamed
-                            },
-                            child: const Text(
-                              'Do not have an account? Sign Up',
-                              style: TextStyle(
-                                  color: Colors.black), // Changed to black
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            'Or connect with us through',
-                            style:
-                                TextStyle(fontSize: 14, color: Colors.black), // Changed to black
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              _socialButton(Icons.facebook, const Color.fromARGB(255, 1, 1, 1), () {}),
-                              const SizedBox(width: 20),
-                              _socialButton(
-                                  Icons.g_mobiledata,
-                                  const Color.fromARGB(255, 0, 0, 0),
-                                  () {}),
-                                const SizedBox(width: 20),
-                              _socialButton(
-                                  Icons.insert_photo_rounded,
-                                  const Color.fromARGB(255, 0, 0, 0),
-                                  () {}),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Welcome Back!',
+                  style: GoogleFonts.openSans(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 8),
+                Text(
+                  'Login to continue your learning journey',
+                  style: GoogleFonts.openSans(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                _buildTextField(
+                  'Email or Phone',
+                  Icons.email_outlined,
+                ),
+                const SizedBox(height: 16),
+                _buildTextField(
+                  'Password',
+                  Icons.lock_outline,
+                  obscureText: true,
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      Get.to(() => const ForgetPasswordPage(),
+                          transition: Transition.rightToLeft);
+                    },
+                    child: const Text(
+                      'Forgot Password?',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                _buildLoginButton(),
+                TextButton(
+                  onPressed: () {
+                    Get.to(() => const SignUpPage());
+                  },
+                  child: const Text(
+                    'Do not have an account? Sign Up',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -167,41 +96,69 @@ class LoginPage extends StatelessWidget {
 
   Widget _buildTextField(String labelText, IconData icon,
       {bool obscureText = false}) {
-    return TextField(
-      obscureText: obscureText,
-      decoration: InputDecoration(
-        labelText: labelText,
-        labelStyle: const TextStyle(color: Colors.black), // Changed to black
-        prefixIcon: Icon(icon, color: Colors.black), // Changed to black
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.black), // Changed to black
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.white70),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.white, width: 2.0),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        filled: true,
-        fillColor: Colors.white, // Changed to white
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      style: const TextStyle(color: Colors.black), // Changed to black
+      child: TextField(
+        obscureText: obscureText,
+        decoration: InputDecoration(
+          hintText: labelText,
+          hintStyle: GoogleFonts.openSans(color: Colors.grey[400]),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          prefixIcon: Icon(icon, color: Colors.black87),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          filled: false,
+          fillColor: Colors.white,
+        ),
+        style: const TextStyle(color: Colors.black),
+      ),
     );
   }
 
-  Widget _socialButton(IconData icon, Color color, VoidCallback onPressed) {
+  Widget _buildLoginButton() {
     return Container(
+      width: double.infinity,
+      height: 56,
       decoration: BoxDecoration(
-        color: Colors.white, // Changed to white
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: IconButton(
-        onPressed: onPressed,
-        icon: Icon(icon, color: color),
-        iconSize: 32,
+      child: ElevatedButton(
+        onPressed: _handleLogin,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: Text(
+          'Login',
+          style: GoogleFonts.openSans(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          ),
+        ),
       ),
     );
   }

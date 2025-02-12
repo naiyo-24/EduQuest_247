@@ -44,7 +44,7 @@ class _FIEMPageState extends State<FIEMPage> {
           elevation: 0,
           title: Text(
             'FIEM',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               color: Colors.black,
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -121,7 +121,7 @@ class _FIEMPageState extends State<FIEMPage> {
                 Expanded(
                   child: Text(
                     'Future Institute of Engineering and Management',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.openSans(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: const Color.fromARGB(255, 0, 0, 0),
@@ -156,7 +156,7 @@ class _FIEMPageState extends State<FIEMPage> {
         children: [
           Text(
             'About Future Institute of Engineering and Management',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               fontSize: 22,
               fontWeight: FontWeight.bold,
               color: Colors.black,
@@ -167,7 +167,7 @@ class _FIEMPageState extends State<FIEMPage> {
             'Future Institute of Engineering and Management (FIEM) is a premier engineering and management institute located in Kolkata, India. '
             'FIEM offers a range of undergraduate and postgraduate programs in engineering, management, and computer applications. '
             'The institute is known for its excellent faculty, state-of-the-art infrastructure, and strong industry connections.',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               fontSize: 16,
               color: Colors.black,
               height: 1.5,
@@ -201,7 +201,7 @@ class _FIEMPageState extends State<FIEMPage> {
                 Expanded(
                   child: Text(
                     'WANT AN ADMISSION IN FIEM?',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.openSans(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: const Color.fromARGB(255, 0, 0, 0),
@@ -226,7 +226,7 @@ class _FIEMPageState extends State<FIEMPage> {
           children: [
             Text(
               'Admission Enquiry',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.openSans(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
@@ -282,7 +282,7 @@ class _FIEMPageState extends State<FIEMPage> {
             const SizedBox(width: 12),
             Text(
               'Submit Application',
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.openSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
@@ -343,7 +343,7 @@ class _FIEMPageState extends State<FIEMPage> {
         children: [
           Text(
             label,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: Colors.black87,

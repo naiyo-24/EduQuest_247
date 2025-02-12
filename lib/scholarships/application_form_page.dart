@@ -31,7 +31,7 @@ class _ApplicationFormPageState extends State<ApplicationFormPage> {
       appBar: AppBar(
         title: Text(
           'Scholarship Application',
-          style: GoogleFonts.poppins(color: Colors.black),
+          style: GoogleFonts.openSans(color: Colors.black),
         ),
         backgroundColor: Colors.white,
         iconTheme: const IconThemeData(color: Colors.black),
@@ -80,7 +80,7 @@ class _ApplicationFormPageState extends State<ApplicationFormPage> {
                   onPressed: _submitForm,
                   child: Text(
                     'Submit Application',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.openSans(
                       color: Colors.white,
                       fontSize: 16,
                     ),

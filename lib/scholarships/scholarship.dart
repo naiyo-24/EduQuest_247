@@ -4,9 +4,7 @@ import 'package:eduquest247/components/floating_nav_button.dart';
 import 'package:eduquest247/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:get/get.dart';
-import 'package:eduquest247/scholarships/application_form_page.dart';
 import 'package:eduquest247/components/standard_app_bar.dart';
 
 class ScholarshipPage extends StatefulWidget {
@@ -115,8 +113,8 @@ class _ScholarshipPageState extends State<ScholarshipPage>
                 child: Text(
                   "Empowering Dreams: Discover Life-Changing Scholarship Opportunities",
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
+                  style: GoogleFonts.openSans(
+                    fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: const Color.fromARGB(255, 0, 0, 0),
                     height: 1.5,
@@ -125,7 +123,7 @@ class _ScholarshipPageState extends State<ScholarshipPage>
               ),
               Expanded(
                 child: _isLoading
-                    ? _buildShimmerLoading()
+                    ? _buildLoadingIndicator()
                     : _buildScholarshipsList(),
               ),
             ],
@@ -135,24 +133,11 @@ class _ScholarshipPageState extends State<ScholarshipPage>
     );
   }
 
-  Widget _buildShimmerLoading() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: 3,
-      itemBuilder: (context, index) {
-        return Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Container(
-            height: 200,
-            margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
-            ),
-          ),
-        );
-      },
+  Widget _buildLoadingIndicator() {
+    return Center(
+      child: CircularProgressIndicator(
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+      ),
     );
   }
 
@@ -192,8 +177,8 @@ class _ScholarshipPageState extends State<ScholarshipPage>
                         children: [
                           Text(
                             '${scholarship['course']} Scholarship',
-                            style: GoogleFonts.poppins(
-                              fontSize: 20,
+                            style: GoogleFonts.openSans(
+                              fontSize: 22,
                               fontWeight: FontWeight.w600,
                               color: const Color.fromARGB(255, 0, 0, 0),
                             ),
@@ -249,16 +234,16 @@ class _ScholarshipPageState extends State<ScholarshipPage>
               children: [
                 Text(
                   label,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
+                  style: GoogleFonts.openSans(
+                    fontSize: 16,
                     color: const Color.fromARGB(179, 0, 0, 0),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
                   value,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
+                  style: GoogleFonts.openSans(
+                    fontSize: 16,
                     color: const Color.fromARGB(255, 0, 0, 0),
                     fontWeight: FontWeight.w500,
                   ),
@@ -288,7 +273,7 @@ class _ScholarshipPageState extends State<ScholarshipPage>
         ],
       ),
       child: ElevatedButton(
-        onPressed: () => _showApplicationForm(),
+        onPressed: () => _showApplicationForm(context, scholarship['course']),
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color.fromARGB(255, 135, 206, 235), // Changed to sky blue
           shadowColor: Colors.transparent,
@@ -298,8 +283,8 @@ class _ScholarshipPageState extends State<ScholarshipPage>
         ),
         child: Text(
           'Apply Now',
-          style: GoogleFonts.poppins(
-            fontSize: 16,
+          style: GoogleFonts.openSans(
+            fontSize: 18,
             fontWeight: FontWeight.w600,
             color: Colors.black, // Changed to black
           ),
@@ -308,70 +293,167 @@ class _ScholarshipPageState extends State<ScholarshipPage>
     );
   }
 
-  void _showApplicationForm() {
-    Get.to(
-      () => const ApplicationFormPage(),
-      transition: Transition.fadeIn,
-      duration: const Duration(milliseconds: 800),
-    );
-  }
-
-  void _showSuccessDialog(BuildContext context) {
+  void _showApplicationForm(BuildContext context, String course) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: const Color.fromARGB(255, 135, 206, 235),
-          title: const Text(
-            'Success',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: const Text(
-            'Application submitted',
-            style: TextStyle(color: Colors.black),
-          ),
-          actions: [
-            TextButton(
-              child: const Text(
-                'OK',
-                style: TextStyle(color: Colors.black),
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+          child: Dialog(
+            backgroundColor: Colors.transparent,
+            child: Container(
+              padding: const EdgeInsets.all(32),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(32),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 32,
+                    offset: const Offset(0, 16),
+                  ),
+                ],
               ),
-              onPressed: () {
-                Navigator.of(context).pop(); // Close dialog
-                Navigator.of(context).pop(); // Close bottom sheet
-              },
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Apply for Scholarship',
+                      style: GoogleFonts.openSans(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF1872db),
+                      ),
+                    ),
+                    Text(
+                      course,
+                      style: GoogleFonts.openSans(
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 91, 166, 252),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    _buildStylishTextField('Full Name', Icons.person),
+                    _buildStylishTextField('Email Address', Icons.email),
+                    _buildStylishTextField('Phone Number', Icons.phone),
+                    _buildStylishTextField('Qualification', Icons.school),
+                    const SizedBox(height: 32),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildDialogButton(
+                            'Cancel',
+                            onPressed: () => Navigator.pop(context),
+                            isOutlined: true,
+                            backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: _buildDialogButton(
+                            'Submit',
+                            onPressed: () {
+                              Get.back();
+                              Get.snackbar(
+                                'Success!',
+                                'Scholarship application submitted successfully',
+                                snackPosition: SnackPosition.TOP,
+                                backgroundColor: Color.fromARGB(255, 135, 206, 235),
+                                colorText: const Color.fromARGB(255, 255, 255, 255),
+                                margin: const EdgeInsets.all(16),
+                                borderRadius: 16,
+                                duration: const Duration(seconds: 3),
+                                icon: const Icon(Icons.check_circle,
+                                    color: Color.fromARGB(255, 255, 255, 255)),
+                              );
+                            }, backgroundColor: Color(0xFF1872db),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ],
+          ),
         );
       },
     );
   }
 
-  Widget _buildFormField(
-    TextEditingController controller,
-    String label,
-    IconData icon,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          prefixIcon: Icon(icon, color: const Color.fromARGB(255, 1, 1, 1)),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+  Widget _buildDialogButton(String text,
+      {required VoidCallback onPressed, bool isOutlined = false, required Color backgroundColor}) {
+    return ElevatedButton(
+      onPressed: () {
+        if (!isOutlined) {
+          // This is the submit button
+          Get.back(); // Close the dialog
+          Get.snackbar(
+            'Success!',
+            'Scholarship application submitted successfully',
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Color(0xFF1872db),
+            colorText: Colors.white,
+            margin: const EdgeInsets.all(16),
+            borderRadius: 16,
+            duration: const Duration(seconds: 3),
+            icon: const Icon(Icons.check_circle, color: Colors.white),
+          );
+        } else {
+          onPressed();
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor:
+            isOutlined ? Colors.white : const Color(0xFF1872db),
+        foregroundColor:
+            isOutlined ? Colors.red : Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: isOutlined
+              ? const BorderSide(color: Color.fromARGB(255, 219, 27, 24))
+              : BorderSide.none,
         ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter $label';
-          }
-          return null;
-        },
+        elevation: isOutlined ? 0 : 2,
+      ),
+      child: Text(
+        text,
+        style: GoogleFonts.openSans(
+          fontWeight: FontWeight.w600,
+          fontSize: 18,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStylishTextField(String label, IconData icon) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        decoration: InputDecoration(
+          prefixIcon: Icon(icon, color: const Color(0xFF1872db)),
+          labelText: label,
+          labelStyle: GoogleFonts.openSans(color: Colors.grey[600]),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide.none,
+          ),
+          filled: true,
+          fillColor: Colors.transparent,
+        ),
       ),
     );
   }

@@ -114,7 +114,7 @@ class AllCollegesPage extends StatelessWidget {
                                 children: [
                                   Text(
                                     colleges[index]['name'],
-                                    style: GoogleFonts.poppins(
+                                    style: GoogleFonts.openSans(
                                       color: Colors.black, // Changed from white
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
@@ -163,7 +163,7 @@ class AllCollegesPage extends StatelessWidget {
         Flexible(
           child: Text(
             text,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               color: Colors.black, // Changed from white
               fontSize: 14,
             ),

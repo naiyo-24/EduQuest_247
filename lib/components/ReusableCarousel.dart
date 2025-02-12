@@ -78,7 +78,7 @@ class ReusableCarousel extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     item.title,
-                                    style: GoogleFonts.jaldi(
+                                    style: GoogleFonts.openSans(
                                       color: Colors.white,
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold,
@@ -92,7 +92,7 @@ class ReusableCarousel extends StatelessWidget {
                             const SizedBox(height: 1), // Minimal spacing
                             Text(
                               item.description,
-                              style: GoogleFonts.jaldi(
+                              style: GoogleFonts.openSans(
                                 color: Colors.white70,
                                 fontSize: 10,
                               ),
@@ -116,7 +116,7 @@ class ReusableCarousel extends StatelessWidget {
                                 ),
                                 child: Text(
                                   item.buttonText,
-                                  style: GoogleFonts.jaldi(
+                                  style: GoogleFonts.openSans(
                                     color: Colors.white,
                                     fontSize: 10,
                                     fontWeight: FontWeight.bold,

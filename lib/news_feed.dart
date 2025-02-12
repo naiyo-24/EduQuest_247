@@ -79,7 +79,7 @@ class _NewsFeedPageState extends State<NewsFeedPage>
         elevation: 0,
         title: Text(
           "News to stay updated with",
-          style: GoogleFonts.jaldi(
+          style: GoogleFonts.openSans(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -122,7 +122,7 @@ class _NewsFeedPageState extends State<NewsFeedPage>
           const SizedBox(height: 16),
           Text(
             article["title"]!,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: const Color(0xFF333333),
@@ -131,7 +131,7 @@ class _NewsFeedPageState extends State<NewsFeedPage>
           const SizedBox(height: 8),
           Text(
             article["description"]!,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               fontSize: 16,
               color: Colors.grey[700],
             ),
@@ -197,7 +197,7 @@ class _NewsFeedPageState extends State<NewsFeedPage>
                 children: [
                   Text(
                     title,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.openSans(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: const Color(0xFF333333),
@@ -206,7 +206,7 @@ class _NewsFeedPageState extends State<NewsFeedPage>
                   const SizedBox(height: 8),
                   Text(
                     description,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.openSans(
                       fontSize: 14,
                       color: Colors.grey[700],
                     ),

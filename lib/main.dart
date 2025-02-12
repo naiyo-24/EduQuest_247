@@ -70,17 +70,17 @@ class EduQuestApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         cardColor: Colors.white,
         textTheme: TextTheme(
-          displayLarge: GoogleFonts.poppins(
+          displayLarge: GoogleFonts.openSans(
             color: const Color(0xFF6A0DAD),
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
-          headlineMedium: GoogleFonts.poppins(
+          headlineMedium: GoogleFonts.openSans(
             color: const Color(0xFF333333),
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
-          bodyLarge: GoogleFonts.poppins(
+          bodyLarge: GoogleFonts.openSans(
             color: const Color(0xFF333333),
             fontSize: 14,
             fontWeight: FontWeight.normal,

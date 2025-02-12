@@ -1,8 +1,8 @@
 import 'package:eduquest247/route/route_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:eduquest247/pages/login.dart';
 import 'package:eduquest247/pages/reset_password.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({super.key});
@@ -55,12 +55,8 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
-        width: screenWidth,
-        height: screenHeight,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -73,172 +69,173 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
           ),
         ),
         child: SafeArea(
-          child: Row(
-            children: [
-              const SizedBox(width: 24),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Back Button Row
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back,
-                          color: Colors.black),
-                      onPressed: () => Get.back(),
-                    ),
-                    // Main Content Column
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Reset Password',
-                            style: TextStyle(
-                              fontFamily: 'Jaldi',
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          const Text(
-                            'Enter your email address to receive OTP',
-                            style: TextStyle(
-                              fontFamily: 'Jaldi',
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
-                          ),
-                          const SizedBox(height: 24),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                TextField(
-                                  controller: _emailController,
-                                  decoration: InputDecoration(
-                                    labelText: 'Email Address',
-                                    labelStyle:
-                                        const TextStyle(color: Colors.black),
-                                    prefixIcon: const Icon(Icons.email_outlined,
-                                        color: Colors.black),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(
-                                          color: Colors.black),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: const BorderSide(
-                                          color: Colors.black),
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.black, width: 2.0),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                  ),
-                                  style: const TextStyle(color: Colors.black),
-                                ),
-                                const SizedBox(height: 16),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 45,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          Colors.transparent,
-                                      shadowColor: Colors.transparent,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                    ),
-                                    onPressed: _sendOTP,
-                                    child: const Text(
-                                      'Send OTP',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                if (_otpSent) ...[
-                                  const SizedBox(height: 16),
-                                  TextField(
-                                    controller: _otpController,
-                                    keyboardType: TextInputType.number,
-                                    maxLength: 6,
-                                    decoration: InputDecoration(
-                                      labelText: 'Enter OTP',
-                                      labelStyle: const TextStyle(
-                                          color: Colors.black),
-                                      prefixIcon: const Icon(Icons.lock_outline,
-                                          color: Colors.black),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                            color: Colors.black),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                        borderSide: const BorderSide(
-                                            color: Colors.black),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: const BorderSide(
-                                            color: Colors.black, width: 2.0),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                    ),
-                                    style: const TextStyle(color: Colors.black),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    height: 45,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                            Colors.white.withOpacity(0.1),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                      ),
-                                      onPressed: _verifyOTP,
-                                      child: const Text(
-                                        'Submit',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  onPressed: () => Get.back(),
                 ),
-              ),
-              const SizedBox(width: 24),
-            ],
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Reset Password',
+                        style: GoogleFonts.openSans(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Enter your email address to receive OTP',
+                        style: GoogleFonts.openSans(
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      _buildTextField(
+                        controller: _emailController,
+                        label: 'Email Address',
+                        icon: Icons.email_outlined,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildSendOTPButton(),
+                      if (_otpSent) ...[
+                        const SizedBox(height: 16),
+                        _buildTextField(
+                          controller: _otpController,
+                          label: 'Enter OTP',
+                          icon: Icons.lock_outline,
+                          keyboardType: TextInputType.number,
+                          maxLength: 6,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildSubmitButton(),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    TextInputType keyboardType = TextInputType.text,
+    int? maxLength,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        maxLength: maxLength,
+        decoration: InputDecoration(
+          hintText: label,
+          hintStyle: GoogleFonts.openSans(color: Colors.grey[400]),
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          prefixIcon: Icon(icon, color: Colors.black87),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          filled: false,
+          fillColor: Colors.white,
+        ),
+        style: const TextStyle(color: Colors.black),
+      ),
+    );
+  }
+
+  Widget _buildSendOTPButton() {
+    return Container(
+      width: double.infinity,
+      height: 56,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: _sendOTP,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: Text(
+          'Send OTP',
+          style: GoogleFonts.openSans(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return Container(
+      width: double.infinity,
+      height: 56,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ElevatedButton(
+        onPressed: _verifyOTP,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: Text(
+          'Submit',
+          style: GoogleFonts.openSans(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
           ),
         ),
       ),

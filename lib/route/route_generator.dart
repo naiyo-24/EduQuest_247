@@ -1,6 +1,5 @@
 import 'package:eduquest247/all_colleges.dart';
 
-import 'package:eduquest247/chat_boat.dart';
 import 'package:eduquest247/colleges/fiem.dart';
 import 'package:eduquest247/colleges/msit.dart';
 import 'package:eduquest247/internships/app_dev.dart';
@@ -96,8 +95,7 @@ class RouteGenerator {
       
       case Routes.college:
         return GetPageRoute(page: () => AllCollegesPage());
-      case Routes.chat:
-        return GetPageRoute(page: () => ChatbotScreen());
+      
       case Routes.logout:
         return GetPageRoute(page: () => LoginPage());
      

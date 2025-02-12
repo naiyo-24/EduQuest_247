@@ -56,7 +56,7 @@ class PostJobsPage extends StatelessWidget {
         children: [
           Text(
             'Create New Job Post',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               foreground: Paint()
@@ -68,7 +68,7 @@ class PostJobsPage extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             'Fill in the details below',
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               fontSize: 14,
               color: Colors.grey[600],
             ),
@@ -157,7 +157,7 @@ class PostJobsPage extends StatelessWidget {
         children: [
           Text(
             label,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.black, // Changed text color to black
@@ -173,7 +173,7 @@ class PostJobsPage extends StatelessWidget {
             child: TextField(
               decoration: InputDecoration(
                 hintText: hint,
-                hintStyle: GoogleFonts.poppins(
+                hintStyle: GoogleFonts.openSans(
                   color: Colors.grey[400],
                   fontSize: 14,
                 ),
@@ -197,7 +197,7 @@ class PostJobsPage extends StatelessWidget {
         children: [
           Text(
             label,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Colors.black, // Changed text color to black
@@ -214,7 +214,7 @@ class PostJobsPage extends StatelessWidget {
               maxLines: 3,
               decoration: InputDecoration(
                 hintText: hint,
-                hintStyle: GoogleFonts.poppins(
+                hintStyle: GoogleFonts.openSans(
                   color: Colors.grey[400],
                   fontSize: 14,
                 ),
@@ -237,8 +237,8 @@ class PostJobsPage extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.grey[50],
-        border: Border(top: BorderSide(color: Colors.grey[200]!)),
+        color: Color.fromARGB(255, 135, 206, 235),
+        border: Border(top: BorderSide(color: Color.fromARGB(255, 135, 206, 235)!)),
       ),
       child: ElevatedButton(
         onPressed: () => _handleSubmit(context),
@@ -252,7 +252,7 @@ class PostJobsPage extends StatelessWidget {
         ),
         child: Text(
           'Post Job',
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             fontSize: 16,
             fontWeight: FontWeight.w600,
             color: const Color.fromARGB(255, 0, 0, 0),
@@ -290,13 +290,13 @@ class PostJobsPage extends StatelessWidget {
         'Success',
         'Job posted successfully',
         snackPosition: SnackPosition.TOP,
-        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(255, 15, 99, 195),
         colorText: Colors.white,
         duration: const Duration(seconds: 2),
       );
 
       // Show posted jobs bottom sheet
-      Future.delayed(const Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 20), () {
         _showMyPosts(context);
       });
     });
@@ -337,10 +337,10 @@ class PostJobsPage extends StatelessWidget {
                   children: [
                     Text(
                       'My Posted Jobs',
-                      style: GoogleFonts.poppins(
+                      style: GoogleFonts.openSans(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: const Color.fromARGB(255, 0, 0, 0),
                       ),
                     ),
                     IconButton(
@@ -348,7 +348,7 @@ class PostJobsPage extends StatelessWidget {
                       onPressed: () {
                         Navigator.pop(context);
                         // Show new form after closing
-                        Future.delayed(const Duration(milliseconds: 300), () {
+                        Future.delayed(const Duration(milliseconds: 30), () {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -395,7 +395,7 @@ class PostJobsPage extends StatelessWidget {
         contentPadding: const EdgeInsets.all(16),
         title: Text(
           job['title']!,
-          style: GoogleFonts.poppins(
+          style: GoogleFonts.openSans(
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
@@ -406,14 +406,14 @@ class PostJobsPage extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               job['company']!,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.openSans(
                 color: Colors.grey[600],
               ),
             ),
             const SizedBox(height: 4),
             Text(
               job['salary']!,
-              style: GoogleFonts.poppins(
+              style: GoogleFonts.openSans(
                 color: Colors.grey[800],
               ),
             ),
@@ -425,7 +425,7 @@ class PostJobsPage extends StatelessWidget {
             PopupMenuItem(
               child: ListTile(
                 leading: const Icon(Icons.edit),
-                title: Text('Edit', style: GoogleFonts.poppins()),
+                title: Text('Edit', style: GoogleFonts.openSans()),
               ),
               onTap: () {
                 // Handle edit
@@ -435,7 +435,7 @@ class PostJobsPage extends StatelessWidget {
               child: ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
                 title: Text('Delete',
-                    style: GoogleFonts.poppins(color: Colors.red)),
+                    style: GoogleFonts.openSans(color: Colors.red)),
               ),
               onTap: () {
                 // Handle delete

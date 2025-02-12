@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       _isLoadingMore = true;
     });
 
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 100));
     loadMoreArticles();
 
     setState(() {
@@ -192,35 +192,35 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         Get.offAll(
           () => HomeScreen(),
           transition: Transition.fadeIn,
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 20),
         );
         break;
       case 1:
         Get.to(
           () => LoanPage(),
           transition: Transition.fadeIn,
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 20),
         );
         break;
       case 2:
         Get.to(
           () => ViewAllInternshipsPage(),
           transition: Transition.fadeIn,
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 20),
         );
         break;
       case 3:
         Get.to(
           () => JobsPostedPage(),
           transition: Transition.fadeIn,
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 20),
         );
         break;
       case 4:
         Get.to(
           () => const PostJobsPage(),
           transition: Transition.fadeIn,
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 20),
         );
         break;
     }
@@ -287,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 ),
 
                 // Add 5px gap
-                const SizedBox(height: 5),
+                const SizedBox(height: 1),
 
                 // News Section - Rest of the space
                 Expanded(
@@ -315,90 +315,103 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           children: [
                             Container(
                               margin: EdgeInsets.zero,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(article["image"]!),
-                                  fit: BoxFit.cover,
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [Color.fromARGB(255, 253, 254, 254), Color(0xFF87CEEB)],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16),
                                 ),
                               ),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.black.withOpacity(0.3),
-                                      Colors.black.withOpacity(0.7),
-                                    ],
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Image at the extreme top of the container with rounded corners
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(16),
+                                      topRight: Radius.circular(16),
+                                    ),
+                                    child: Image.asset(
+                                      article["image"]!,
+                                      fit: BoxFit.cover,
+                                      height: 200, // Adjust the height as needed
+                                      width: double.infinity,
+                                    ),
                                   ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 80),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          FadeTransition(
-                                            opacity: _arrowAnimation,
-                                            child: const Icon(
-                                              Icons.keyboard_arrow_up,
-                                              color: Colors.white,
-                                              size: 32,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            'Swipe up for more',
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 14,
-                                              color:
-                                                  Colors.white.withOpacity(0.8),
-                                              letterSpacing: 0.5,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              article["title"]!,
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 24,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 16),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            FadeTransition(
+                                              opacity: _arrowAnimation,
+                                              child: const Icon(
+                                                Icons.keyboard_arrow_up,
+                                                color: Color.fromARGB(255, 0, 0, 0),
+                                                size: 24,
                                               ),
-                                              maxLines: 2,
-                                              overflow: TextOverflow.ellipsis,
                                             ),
-                                          ),
-                                          IconButton(
-                                            icon: const Icon(Icons.share,
-                                                color: Colors.white),
-                                            onPressed: () {
-                                              // Add share functionality
-                                            },
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        article["description"]!,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 16,
-                                          color: Colors.white.withOpacity(0.9),
-                                          height: 1.5,
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              'Swipe up for more',
+                                              style: GoogleFonts.jaldi(
+                                                fontSize: 16,
+                                                color:
+                                                    const Color.fromARGB(255, 0, 0, 0).withOpacity(0.8),
+                                                letterSpacing: 0.5,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                      const SizedBox(height: 24),
-                                    ],
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                article["title"]!,
+                                                style: GoogleFonts.openSans(
+                                                  fontSize: 34,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: const Color.fromARGB(255, 0, 0, 0),
+                                                ),
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.share,
+                                                  color: Color.fromARGB(255, 0, 0, 0)),
+                                              onPressed: () {
+                                                // Add share functionality
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          article["description"]!,
+                                          style: GoogleFonts.jaldi(
+                                            fontSize: 20,
+                                            color: const Color.fromARGB(255, 1, 1, 1).withOpacity(0.9),
+                                            height: 1.5,
+                                          ),
+                                          maxLines: 4,
+                                                overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 26),
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
                           ],
@@ -444,7 +457,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         children: [
           Text(
             title,
-            style: GoogleFonts.poppins(
+            style: GoogleFonts.openSans(
               color: const Color(0xFF333333),
               fontSize: 18, // Reduced from 18
               fontWeight: FontWeight.w700, // Changed to bold
@@ -526,7 +539,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             children: [
               Text(
                 name,
-                style: GoogleFonts.jaldi(
+                style: GoogleFonts.openSans(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: const Color(0xFF333333),
@@ -535,7 +548,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               const SizedBox(height: 4),
               Text(
                 package,
-                style: GoogleFonts.jaldi(
+                style: GoogleFonts.openSans(
                   fontSize: 14,
                   color: Colors.grey[700],
                 ),
@@ -543,7 +556,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               const SizedBox(height: 4),
               Text(
                 location,
-                style: GoogleFonts.jaldi(
+                style: GoogleFonts.openSans(
                   fontSize: 14,
                   color: Colors.grey[700],
                 ),
@@ -551,7 +564,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               const SizedBox(height: 8),
               Text(
                 description,
-                style: GoogleFonts.jaldi(
+                style: GoogleFonts.openSans(
                   fontSize: 14,
                   color: Colors.grey[700],
                 ),

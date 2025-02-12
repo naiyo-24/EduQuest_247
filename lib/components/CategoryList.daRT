@@ -34,7 +34,7 @@ class ReusableCategoryList extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 category.name,
-                style: GoogleFonts.jaldi(
+                style: GoogleFonts.openSans(
                   color: Colors.white70,
                   fontSize: 12,
                 ),
