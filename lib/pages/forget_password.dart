@@ -1,8 +1,9 @@
-import 'package:eduquest247/route/route_generator.dart';
+import 'package:eduquest247/pages/reset_password.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:eduquest247/pages/reset_password.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ForgetPasswordPage extends StatefulWidget {
   const ForgetPasswordPage({super.key});
@@ -12,46 +13,118 @@ class ForgetPasswordPage extends StatefulWidget {
 }
 
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
-  final _emailController = TextEditingController();
-  final _otpController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
   bool _otpSent = false;
+  bool isLoading = false;
+  String errorMessage = "";
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _phoneController.dispose();
     _otpController.dispose();
     super.dispose();
   }
 
-  void _sendOTP() {
-    if (_emailController.text.isNotEmpty) {
+  void _sendOTP() async {
+  final phone = _phoneController.text;
+  if (phone.isEmpty) {
+    setState(() {
+      errorMessage = "Phone number is required!";
+      isLoading = false;
+    });
+    return;
+  }
+
+  final url = Uri.parse('http://192.168.29.159:5000/api/send-otp');
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'phone': phone}),
+    );
+
+    final responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 200 && responseData['status'] == 'success') {
       setState(() {
         _otpSent = true;
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(responseData['message']), backgroundColor: Colors.green),
+      );
+    } else {
+      setState(() => isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(responseData['message'] ?? 'Failed to send OTP')),
+      );
+    }
+} catch (e) {
+  setState(() => isLoading = false);
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text('Failed to connect to the server.')),
+  );
+}
+
+// Simulate sending OTP
+Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        _otpSent = true;
+        isLoading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('OTP sent to your email'),
+          content: Text('OTP sent to your registered phone number'),
           backgroundColor: Colors.green,
         ),
       );
-    }
+    });
   }
 
-  void _verifyOTP() {
-    if (_otpController.text.isNotEmpty) {
+void _verifyOTP() async {
+  final phone = _phoneController.text;
+  final otp = _otpController.text;
+
+  if (otp.isEmpty) {
+    setState(() {
+      errorMessage = "OTP is required!";
+      isLoading = false;
+    });
+    return;
+  }
+
+  final url = Uri.parse('http://127.0.0.1:5000/api/send-otp');
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'phone': phone, 'otp': otp}),
+    );
+
+    final responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 200 && responseData['status'] == 'success') {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('OTP verified successfully'),
-          backgroundColor: Colors.green,
-        ),
+        SnackBar(content: Text(responseData['message']), backgroundColor: Colors.green),
       );
-      Future.delayed(
-        const Duration(seconds: 1),
-        () => Get.to(() => const ResetPasswordPage(),
-            transition: Transition.fadeIn),
+      Get.to(() => ResetPasswordPage(phone: phone));  // Pass phone for password reset
+    } else {
+      setState(() => isLoading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(responseData['message'] ?? 'OTP verification failed')),
       );
     }
+  } catch (e) {
+    setState(() => isLoading = false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Failed to connect to the server.')),
+    );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +166,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Enter your email address to receive OTP',
+                        'Enter your registered phone number to receive an OTP',
                         style: GoogleFonts.openSans(
                           fontSize: 16,
                           color: Colors.black,
@@ -101,10 +174,19 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                       ),
                       const SizedBox(height: 32),
                       _buildTextField(
-                        controller: _emailController,
-                        label: 'Email Address',
-                        icon: Icons.email_outlined,
+                        controller: _phoneController,
+                        label: 'Phone Number',
+                        icon: Icons.phone_outlined,
+                        keyboardType: TextInputType.phone,
                       ),
+                      if (errorMessage.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            errorMessage,
+                            style: const TextStyle(color: Colors.red, fontSize: 14),
+                          ),
+                        ),
                       const SizedBox(height: 16),
                       _buildSendOTPButton(),
                       if (_otpSent) ...[
@@ -177,31 +259,15 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: ElevatedButton(
-        onPressed: _sendOTP,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: Text(
-          'Send OTP',
-          style: GoogleFonts.openSans(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
-          ),
-        ),
+        onPressed: isLoading ? null : _sendOTP,
+        child: isLoading
+            ? const CircularProgressIndicator(color: Colors.black)
+            : const Text(
+                'Send OTP',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+              ),
       ),
     );
   }
@@ -213,31 +279,15 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: ElevatedButton(
-        onPressed: _verifyOTP,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        child: Text(
-          'Submit',
-          style: GoogleFonts.openSans(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
-          ),
-        ),
+        onPressed: isLoading ? null : _verifyOTP,
+        child: isLoading
+            ? const CircularProgressIndicator(color: Colors.black)
+            : const Text(
+                'Submit OTP',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+              ),
       ),
     );
   }

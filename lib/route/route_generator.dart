@@ -140,7 +140,7 @@ class RouteGenerator {
         );
       case Routes.resetPassword:
         return GetPageRoute(
-          page: () => const ResetPasswordPage(),
+          page: () => const ResetPasswordPage(phone: 'Enter phone number',),
           transition: Transition.fadeIn,
         );
       case '/hr-login':

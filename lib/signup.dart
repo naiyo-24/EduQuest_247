@@ -1,3 +1,7 @@
+// Ensure correct import path
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:eduquest247/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'pages/login.dart';
@@ -12,19 +16,78 @@ class SignUpPage extends StatefulWidget {
 
 class SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
-  void _signUp() {
-    if (_formKey.currentState!.validate()) {
-      // Perform sign-up logic here
-      Get.off(() => const LoginPage());
+  bool isLoading = false;
+  String errorMessage = "";
+
+  void _signUp(BuildContext context) async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      isLoading = true;
+      errorMessage = "";
+    });
+
+    final String phone = _phoneController.text.trim();
+    final String password = _passwordController.text.trim();
+
+    final Uri signupUrl = Uri.parse('http://127.0.0.1:5000/api/signup');
+
+    try {
+      final response = await http.post(
+        signupUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'phone': phone,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        // Automatically log in after signup
+        _loginUser(phone, password);
+      } else {
+        final responseData = jsonDecode(response.body);
+        setState(() => errorMessage = responseData['message']);
+      }
+    } catch (e) {
+      setState(() => errorMessage = 'Error: $e');
+    } finally {
+      setState(() => isLoading = false);
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
+  void _loginUser(String phone, String password) async {
+    final Uri loginUrl = Uri.parse('http://127.0.0.1:5000/api/login');
+
+    try {
+      final response = await http.post(
+        loginUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'phone': phone,
+          'password': password,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Signup and login successful!')),
+        );
+        Get.offAll(() => const HomeScreen());
+      } else {
+        setState(() => errorMessage = 'Login failed after signup.');
+      }
+    } catch (e) {
+      setState(() => errorMessage = 'Login error: $e');
+    }
+  }
+@override
+Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -66,7 +129,7 @@ class SignUpPageState extends State<SignUpPage> {
                   const SizedBox(height: 32),
                   _buildTextField(
                     controller: _emailController,
-                    label: 'Email',
+                    label: 'Enter Your Email',
                     icon: Icons.email_outlined,
                     validator: (value) {
                       if (value?.isEmpty ?? true) return 'Email is required';
@@ -77,7 +140,7 @@ class SignUpPageState extends State<SignUpPage> {
                   const SizedBox(height: 16),
                   _buildTextField(
                     controller: _phoneController,
-                    label: 'Phone Number',
+                    label: 'Enter Your Phone Number',
                     icon: Icons.phone_outlined,
                     validator: (value) {
                       if (value?.isEmpty ?? true) return 'Phone number is required';
@@ -87,7 +150,7 @@ class SignUpPageState extends State<SignUpPage> {
                   const SizedBox(height: 16),
                   _buildTextField(
                     controller: _passwordController,
-                    label: 'Password',
+                    label: 'Set a Password',
                     icon: Icons.lock_outline,
                     isPassword: true,
                     validator: (value) {
@@ -96,6 +159,27 @@ class SignUpPageState extends State<SignUpPage> {
                       return null;
                     },
                   ),
+                  const SizedBox(height: 16),
+                  _buildTextField(
+                    controller: _confirmPasswordController,
+                    label: 'Enter your Password again',
+                    icon: Icons.lock_outline,
+                    isPassword: true,
+                    validator: (value) {
+                      if (value?.isEmpty ?? true) return 'Password confirmation is required';
+                      if (value != _passwordController.text) return 'Passwords do not match';
+                      return null;
+                    },
+                  ),
+
+                  if (errorMessage.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        errorMessage,
+                        style: TextStyle(color: Colors.red, fontSize: 14),
+                      ),
+                    ),
                   const SizedBox(height: 24),
                   _buildSignUpButton(),
                   TextButton(
@@ -171,7 +255,7 @@ class SignUpPageState extends State<SignUpPage> {
         ],
       ),
       child: ElevatedButton(
-        onPressed: _signUp,
+        onPressed: isLoading ? null : () => _signUp(context),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
@@ -179,14 +263,16 @@ class SignUpPageState extends State<SignUpPage> {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: Text(
-          'Sign Up',
-          style: GoogleFonts.openSans(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
-          ),
-        ),
+        child: isLoading
+            ? CircularProgressIndicator(color: Colors.black)
+            : Text(
+                'Sign Up',
+                style: GoogleFonts.openSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black,
+                ),
+              ),
       ),
     );
   }

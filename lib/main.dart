@@ -37,7 +37,7 @@ class EduQuestApp extends StatelessWidget {
           transition: Transition.fadeIn,
         ),
         GetPage(
-          name: '/home',
+          name: '/home_screen',
           page: () => HomeScreen(),
           transition: Transition.fadeIn,
         ),

@@ -1,14 +1,16 @@
-import 'package:eduquest247/route/route_generator.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 class ResetPasswordPage extends StatefulWidget {
-  const ResetPasswordPage({super.key});
+  final String phone;
+  const ResetPasswordPage({super.key, required this.phone});
 
   @override
   State<ResetPasswordPage> createState() => _ResetPasswordPageState();
 }
+
 
 class _ResetPasswordPageState extends State<ResetPasswordPage> {
   final _passwordController = TextEditingController();
@@ -23,27 +25,47 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     super.dispose();
   }
 
-  void _resetPassword() {
-    if (_passwordController.text == _confirmPasswordController.text) {
+Future<void> _resetPassword() async {
+  final newPassword = _passwordController.text;
+  final confirmPassword = _confirmPasswordController.text;
+
+  if (newPassword != confirmPassword) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Passwords do not match!'), backgroundColor: Colors.red),
+    );
+    return;
+  }
+
+  final url = Uri.parse('http://192.168.29.159:5000/api/reset-password');
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'phone': widget.phone,
+        'new_password': newPassword,
+      }),
+    );
+
+    final responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 200 && responseData['status'] == 'success') {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Password reset successful'),
-          backgroundColor: Colors.green,
-        ),
+        SnackBar(content: Text(responseData['message']), backgroundColor: Colors.green),
       );
-      Future.delayed(
-        const Duration(seconds: 1),
-        () => Get.offAllNamed(Routes.login),
-      );
+      Get.offAllNamed('/login');  // Redirect to login page after reset
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Passwords do not match'),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(responseData['message'] ?? 'Failed to reset password')),
       );
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Failed to connect to the server.')),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {

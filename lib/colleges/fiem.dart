@@ -269,7 +269,7 @@ class _FIEMPageState extends State<FIEMPage> {
       child: ElevatedButton(
         onPressed: _handleSubmit,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
+          backgroundColor: const Color.fromARGB(255, 62, 83, 236),
           shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),

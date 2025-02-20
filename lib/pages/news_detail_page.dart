@@ -5,7 +5,7 @@ import 'package:share_plus/share_plus.dart';
 class NewsDetailPage extends StatelessWidget {
   final Map<String, String> article;
 
-  const NewsDetailPage({Key? key, required this.article}) : super(key: key);
+  const NewsDetailPage({super.key, required this.article});
 
   @override
   Widget build(BuildContext context) {
