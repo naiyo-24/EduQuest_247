@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'internship_form.dart';
 import 'package:eduquest247/components/standard_app_bar.dart';
 

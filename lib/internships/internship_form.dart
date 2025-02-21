@@ -2,6 +2,8 @@ import 'package:eduquest247/viewall_internships.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class InternshipApplicationForm extends StatefulWidget {
   final String internshipType;
@@ -22,6 +24,14 @@ class _InternshipApplicationFormState extends State<InternshipApplicationForm>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController collegeController = TextEditingController();
+  final TextEditingController yearOfStudyController = TextEditingController();
+  final TextEditingController skillsController = TextEditingController();
+  final TextEditingController motivationController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -38,10 +48,17 @@ class _InternshipApplicationFormState extends State<InternshipApplicationForm>
   @override
   void dispose() {
     _animationController.dispose();
+    fullNameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    collegeController.dispose();
+    yearOfStudyController.dispose();
+    skillsController.dispose();
+    motivationController.dispose();
     super.dispose();
   }
 
-  Widget _buildTextField(String label, IconData icon, {int maxLines = 1}) {
+  Widget _buildTextField(String label, IconData icon, TextEditingController controller, {int maxLines = 1}) {
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
@@ -73,6 +90,7 @@ class _InternshipApplicationFormState extends State<InternshipApplicationForm>
                 ],
               ),
               child: TextFormField(
+                controller: controller,
                 maxLines: maxLines,
                 style: GoogleFonts.openSans(
                   fontSize: 15,
@@ -101,7 +119,7 @@ class _InternshipApplicationFormState extends State<InternshipApplicationForm>
                   contentPadding: const EdgeInsets.all(8),
                 ),
                 validator: (value) =>
-                    value?.isEmpty ?? true ? '${label} is required' : null,
+                    value?.isEmpty ?? true ? '$label is required' : null,
               ),
             ),
           ],
@@ -110,46 +128,48 @@ class _InternshipApplicationFormState extends State<InternshipApplicationForm>
     );
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      // Show loading indicator
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return Center(
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 0, 0, 0),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const CircularProgressIndicator(),
-            ),
-          );
-        },
-      );
+      final String fullName = fullNameController.text.trim();
+      final String email = emailController.text.trim();
+      final String phone = phoneController.text.trim();
+      final String college = collegeController.text.trim();
+      final String yearOfStudy = yearOfStudyController.text.trim();
+      final String skills = skillsController.text.trim();
+      final String motivation = motivationController.text.trim();
+      final String internshipType = widget.internshipType;
 
-      // Simulate API call with delay
-      Future.delayed(const Duration(seconds: 1), () {
-        Navigator.pop(context); // Remove loading indicator
+      final Uri apiUrl = Uri.parse('http://127.0.0.1:5000/api/internship-apply');
 
-        Get.snackbar(
-          'Success',
-          'Internship application submitted successfully',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: const Color(0xFF1872db),
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(16),
-          borderRadius: 16,
-          duration: const Duration(seconds: 3),
+      try {
+        final response = await http.post(
+          apiUrl,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'fullName': fullName,
+            'email': email,
+            'phone': phone,
+            'college': college,
+            'yearOfStudy': yearOfStudy,
+            'skills': skills,
+            'motivation': motivation,
+            'internshipType': internshipType,
+          }),
         );
 
-        // Direct navigation to ViewAllInternshipsPage
-        Future.delayed(const Duration(seconds: 1), () {
+        if (response.statusCode == 201) {
+          Get.snackbar('Success', 'Internship application submitted successfully.',
+              backgroundColor: Colors.green, colorText: Colors.white);
           Get.off(() => ViewAllInternshipsPage());
-        });
-      });
+        } else {
+          final responseData = jsonDecode(response.body);
+          Get.snackbar('Error', responseData['message'],
+              backgroundColor: Colors.red, colorText: Colors.white);
+        }
+      } catch (e) {
+        Get.snackbar('Error', 'Failed to submit application: $e',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
     }
   }
 
@@ -173,22 +193,20 @@ class _InternshipApplicationFormState extends State<InternshipApplicationForm>
             _buildHeader(),
             const SizedBox(height: 32),
             _buildFormSection('Personal Information', [
-              _buildTextField('Full Name', Icons.person_outline),
-              _buildTextField('Email Address', Icons.email_outlined),
-              _buildTextField('Phone Number', Icons.phone_outlined),
+              _buildTextField('Full Name', Icons.person_outline, fullNameController),
+              _buildTextField('Email Address', Icons.email_outlined, emailController),
+              _buildTextField('Phone Number', Icons.phone_outlined, phoneController),
             ]),
-            _buildDivider(),
             _buildFormSection('Academic Details', [
-              _buildTextField('College/University', Icons.school_outlined),
-              _buildTextField(
-                  'Current Year of Study', Icons.calendar_today_outlined),
-              _buildTextField('Skills & Expertise', Icons.star_outline),
+              _buildTextField('College/University', Icons.school_outlined, collegeController),
+              _buildTextField('Current Year of Study', Icons.calendar_today_outlined, yearOfStudyController),
+              _buildTextField('Skills & Expertise', Icons.star_outline, skillsController),
             ]),
-            _buildDivider(),
             _buildFormSection('Application Details', [
               _buildTextField(
                 'Why do you want to join this internship?',
                 Icons.description_outlined,
+                motivationController,
                 maxLines: 3,
               ),
             ]),

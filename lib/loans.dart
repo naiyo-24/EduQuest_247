@@ -1,20 +1,12 @@
 import 'dart:ui';
-
-import 'package:eduquest247/components/floating_nav_button.dart';
-
-import 'package:eduquest247/components/app_bar_dropdown.dart';
-
 import 'package:eduquest247/components/floating_nav_button.dart';
 import 'package:eduquest247/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'package:eduquest247/all_colleges.dart';
-import 'package:eduquest247/my_account.dart';
-import 'package:eduquest247/notifications.dart';
-import 'package:eduquest247/scholarships/scholarship.dart';
 import 'package:eduquest247/components/standard_app_bar.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 // Main function to run the app
 void main() {
@@ -87,7 +79,7 @@ class LoanPage extends StatelessWidget {
         Get.offAll(
           () => HomeScreen(),
           transition: Transition.fadeIn,
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 30),
         );
         return false;
       },
@@ -218,10 +210,62 @@ class LoanPage extends StatelessWidget {
   }
 }
 
-class ApplyFormDialog extends StatelessWidget {
+class ApplyFormDialog extends StatefulWidget {
   final String bankName;
 
-  const ApplyFormDialog({super.key, required this.bankName});
+  const ApplyFormDialog({required this.bankName, Key? key}) : super(key: key);
+
+  @override
+  _ApplyFormDialogState createState() => _ApplyFormDialogState();
+}
+
+class _ApplyFormDialogState extends State<ApplyFormDialog> {
+  final TextEditingController fullNameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController amountController = TextEditingController();
+
+  Future<void> _submitLoanApplication() async {
+    final String fullName = fullNameController.text.trim();
+    final String email = emailController.text.trim();
+    final String phone = phoneController.text.trim();
+    final String amount = amountController.text.trim();
+
+    if (fullName.isEmpty || email.isEmpty || phone.isEmpty || amount.isEmpty) {
+      Get.snackbar('Error', 'All fields are required.',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return;
+    }
+
+    final Uri apiUrl = Uri.parse('http://127.0.0.1:5000/api/loan-apply');
+
+    try {
+      final response = await http.post(
+        apiUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'fullName': fullName,
+          'email': email,
+          'phone': phone,
+          'amount': amount,
+          'bankName': widget.bankName,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        Get.back();
+        Get.snackbar('Success', 'Loan application submitted successfully.',
+            backgroundColor: Colors.green, colorText: Colors.white);
+      } else {
+        final responseData = jsonDecode(response.body);
+        Get.snackbar('Error', responseData['message'],
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to submit application: $e',
+          backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -255,17 +299,17 @@ class ApplyFormDialog extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  bankName,
+                  widget.bankName,
                   style: GoogleFonts.openSans(
                     fontSize: 18,
                     color: Color.fromARGB(255, 91, 166, 252),
                   ),
                 ),
                 const SizedBox(height: 32),
-                _buildStylishTextField('Full Name', Icons.person),
-                _buildStylishTextField('Email Address', Icons.email),
-                _buildStylishTextField('Phone Number', Icons.phone),
-                _buildStylishTextField('Desired Loan Amount', Icons.currency_rupee),
+                _buildStylishTextField('Full Name', Icons.person, fullNameController),
+                _buildStylishTextField('Email Address', Icons.email, emailController),
+                _buildStylishTextField('Phone Number', Icons.phone, phoneController),
+                _buildStylishTextField('Desired Loan Amount', Icons.currency_rupee, amountController),
                 const SizedBox(height: 32),
                 Row(
                   children: [
@@ -281,21 +325,8 @@ class ApplyFormDialog extends StatelessWidget {
                     Expanded(
                       child: _buildDialogButton(
                         'Submit',
-                        onPressed: () {
-                          Get.back();
-                          Get.snackbar(
-                            'Success!',
-                            'Loan application submitted successfully',
-                            snackPosition: SnackPosition.TOP,
-                            backgroundColor: Color.fromARGB(255, 135, 206, 235),
-                            colorText: const Color.fromARGB(255, 255, 255, 255),
-                            margin: const EdgeInsets.all(16),
-                            borderRadius: 16,
-                            duration: const Duration(seconds: 3),
-                            icon: const Icon(Icons.check_circle,
-                                color: Color.fromARGB(255, 255, 255, 255)),
-                          );
-                        }, backgroundColor: Color(0xFF1872db),
+                        onPressed: _submitLoanApplication,
+                        backgroundColor: Color(0xFF1872db),
                       ),
                     ),
                   ],
@@ -311,50 +342,25 @@ class ApplyFormDialog extends StatelessWidget {
   Widget _buildDialogButton(String text,
       {required VoidCallback onPressed, bool isOutlined = false, required Color backgroundColor}) {
     return ElevatedButton(
-      onPressed: () {
-        if (!isOutlined) {
-          // This is the submit button
-          Get.back(); // Close the dialog
-          Get.snackbar(
-            'Success!',
-            'Loan application submitted successfully',
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Color(0xFF1872db),
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(16),
-            borderRadius: 16,
-            duration: const Duration(seconds: 3),
-            icon: const Icon(Icons.check_circle, color: Colors.white),
-          );
-        } else {
-          onPressed();
-        }
-      },
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor:
-            isOutlined ? Colors.white : const Color(0xFF1872db),
-        foregroundColor:
-            isOutlined ? Colors.red : Colors.white,
+        backgroundColor: isOutlined ? Colors.white : backgroundColor,
+        foregroundColor: isOutlined ? Colors.red : Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: isOutlined
-              ? const BorderSide(color: Color.fromARGB(255, 219, 27, 24))
-              : BorderSide.none,
+          side: isOutlined ? const BorderSide(color: Color.fromARGB(255, 219, 27, 24)) : BorderSide.none,
         ),
         elevation: isOutlined ? 0 : 2,
       ),
       child: Text(
         text,
-        style: GoogleFonts.openSans(
-          fontWeight: FontWeight.w600,
-          fontSize: 16,
-        ),
+        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
       ),
     );
   }
 
-  Widget _buildStylishTextField(String label, IconData icon) {
+  Widget _buildStylishTextField(String label, IconData icon, TextEditingController controller) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
@@ -369,6 +375,7 @@ class ApplyFormDialog extends StatelessWidget {
         ],
       ),
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           prefixIcon: Icon(icon, color: const Color(0xFF1872db)),
           labelText: label,

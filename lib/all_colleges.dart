@@ -1,15 +1,11 @@
 import 'package:eduquest247/colleges/fiem.dart';
 import 'package:eduquest247/colleges/msit.dart';
-import 'package:eduquest247/components/app_bar_dropdown.dart';
-import 'package:eduquest247/components/floating_nav_button.dart';
-import 'package:eduquest247/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'dart:ui';
+import 'package:eduquest247/components/standard_app_bar.dart';
 
-import 'package:eduquest247/components/standard_app_bar.dart';
-import 'package:eduquest247/components/standard_app_bar.dart';
 
 class AllCollegesPage extends StatelessWidget {
   final List<Map<String, dynamic>> colleges = [

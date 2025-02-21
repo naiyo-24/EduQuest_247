@@ -1,11 +1,10 @@
 import 'dart:ui';
-import 'package:eduquest247/components/app_bar_dropdown.dart';
-import 'package:eduquest247/components/floating_nav_button.dart';
-import 'package:eduquest247/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:eduquest247/components/standard_app_bar.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ScholarshipPage extends StatefulWidget {
   const ScholarshipPage({super.key});
@@ -33,10 +32,10 @@ class _ScholarshipPageState extends State<ScholarshipPage>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 30),
     );
     // Simulate loading
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 1), () {
       if (mounted) setState(() => _isLoading = false);
     });
   }
@@ -334,10 +333,10 @@ class _ScholarshipPageState extends State<ScholarshipPage>
                       ),
                     ),
                     const SizedBox(height: 32),
-                    _buildStylishTextField('Full Name', Icons.person),
-                    _buildStylishTextField('Email Address', Icons.email),
-                    _buildStylishTextField('Phone Number', Icons.phone),
-                    _buildStylishTextField('Qualification', Icons.school),
+                    _buildStylishTextField('Full Name', Icons.person, nameController),
+                    _buildStylishTextField('Email Address', Icons.email, emailController),
+                    _buildStylishTextField('Phone Number', Icons.phone, phoneController),
+                    _buildStylishTextField('Qualification', Icons.school, qualificationController),
                     const SizedBox(height: 32),
                     Row(
                       children: [
@@ -353,21 +352,8 @@ class _ScholarshipPageState extends State<ScholarshipPage>
                         Expanded(
                           child: _buildDialogButton(
                             'Submit',
-                            onPressed: () {
-                              Get.back();
-                              Get.snackbar(
-                                'Success!',
-                                'Scholarship application submitted successfully',
-                                snackPosition: SnackPosition.TOP,
-                                backgroundColor: Color.fromARGB(255, 135, 206, 235),
-                                colorText: const Color.fromARGB(255, 255, 255, 255),
-                                margin: const EdgeInsets.all(16),
-                                borderRadius: 16,
-                                duration: const Duration(seconds: 3),
-                                icon: const Icon(Icons.check_circle,
-                                    color: Color.fromARGB(255, 255, 255, 255)),
-                              );
-                            }, backgroundColor: Color(0xFF1872db),
+                            onPressed: () => _submitScholarshipApplication(course),
+                            backgroundColor: Color(0xFF1872db),
                           ),
                         ),
                       ],
@@ -382,53 +368,70 @@ class _ScholarshipPageState extends State<ScholarshipPage>
     );
   }
 
+  Future<void> _submitScholarshipApplication(String course) async {
+    final String fullName = nameController.text.trim();
+    final String email = emailController.text.trim();
+    final String phone = phoneController.text.trim();
+    final String qualification = qualificationController.text.trim();
+
+    if (fullName.isEmpty || email.isEmpty || phone.isEmpty || qualification.isEmpty) {
+      Get.snackbar('Error', 'All fields are required.',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return;
+    }
+
+    final Uri apiUrl = Uri.parse('http://127.0.0.1:5000/api/scholarship-apply');
+
+    try {
+      final response = await http.post(
+        apiUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'fullName': fullName,
+          'email': email,
+          'phone': phone,
+          'qualification': qualification,
+          'course': course,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        Get.back();
+        Get.snackbar('Success', 'Scholarship application submitted successfully.',
+            backgroundColor: Colors.green, colorText: Colors.white);
+      } else {
+        final responseData = jsonDecode(response.body);
+        Get.snackbar('Error', responseData['message'],
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to submit application: $e',
+          backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  }
+
   Widget _buildDialogButton(String text,
       {required VoidCallback onPressed, bool isOutlined = false, required Color backgroundColor}) {
     return ElevatedButton(
-      onPressed: () {
-        if (!isOutlined) {
-          // This is the submit button
-          Get.back(); // Close the dialog
-          Get.snackbar(
-            'Success!',
-            'Scholarship application submitted successfully',
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Color(0xFF1872db),
-            colorText: Colors.white,
-            margin: const EdgeInsets.all(16),
-            borderRadius: 16,
-            duration: const Duration(seconds: 3),
-            icon: const Icon(Icons.check_circle, color: Colors.white),
-          );
-        } else {
-          onPressed();
-        }
-      },
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor:
-            isOutlined ? Colors.white : const Color(0xFF1872db),
-        foregroundColor:
-            isOutlined ? Colors.red : Colors.white,
+        backgroundColor: isOutlined ? Colors.white : backgroundColor,
+        foregroundColor: isOutlined ? Colors.red : Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: isOutlined
-              ? const BorderSide(color: Color.fromARGB(255, 219, 27, 24))
-              : BorderSide.none,
+          side: isOutlined ? const BorderSide(color: Color.fromARGB(255, 219, 27, 24)) : BorderSide.none,
         ),
         elevation: isOutlined ? 0 : 2,
       ),
       child: Text(
         text,
-        style: GoogleFonts.openSans(
-          fontWeight: FontWeight.w600,
-          fontSize: 18,
-        ),
+        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
       ),
     );
   }
 
-  Widget _buildStylishTextField(String label, IconData icon) {
+  Widget _buildStylishTextField(String label, IconData icon, TextEditingController controller) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
@@ -443,6 +446,7 @@ class _ScholarshipPageState extends State<ScholarshipPage>
         ],
       ),
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           prefixIcon: Icon(icon, color: const Color(0xFF1872db)),
           labelText: label,

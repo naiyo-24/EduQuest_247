@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
  // Add this import
 import 'package:eduquest247/all_colleges.dart'; // Add this import
 
@@ -28,6 +31,50 @@ class _FIEMPageState extends State<FIEMPage> {
     _degreeController.dispose();
     _messageController.dispose();
     super.dispose();
+  }
+
+  Future<void> _submitCollegeEnquiry(String collegeName) async {
+    final String fullName = _nameController.text.trim();
+    final String email = _emailController.text.trim();
+    final String phone = _phoneController.text.trim();
+    final String degree = _degreeController.text.trim();
+    final String message = _messageController.text.trim();
+
+    if (fullName.isEmpty || email.isEmpty || phone.isEmpty || degree.isEmpty || message.isEmpty) {
+      Get.snackbar('Error', 'All fields are required.',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return;
+    }
+
+    final Uri apiUrl = Uri.parse('http://127.0.0.1:5000/api/college-enquiry');
+
+    try {
+      final response = await http.post(
+        apiUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'fullName': fullName,
+          'email': email,
+          'phone': phone,
+          'degree': degree,
+          'message': message,
+          'collegeName': collegeName
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        Get.back();
+        Get.snackbar('Success', 'College admission enquiry submitted successfully.',
+            backgroundColor: Colors.green, colorText: Colors.white);
+      } else {
+        final responseData = jsonDecode(response.body);
+        Get.snackbar('Error', responseData['message'],
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to submit enquiry: $e',
+          backgroundColor: Colors.red, colorText: Colors.white);
+    }
   }
 
   @override
@@ -295,40 +342,11 @@ class _FIEMPageState extends State<FIEMPage> {
   }
 
   void _handleSubmit() {
-    if (_formKey.currentState!.validate()) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return const Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color.fromARGB(255, 0, 0, 0)),
-            ),
-          );
-        },
-      );
-
-      Future.delayed(const Duration(seconds: 1), () {
-        Navigator.pop(context); // Remove loading indicator
-
-        Get.snackbar(
-          'Success',
-          'Admission enquiry submitted successfully',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-          colorText: Colors.white,
-          duration: const Duration(seconds: 2),
-          margin: const EdgeInsets.all(16),
-          borderRadius: 10,
-        );
-
-        // Navigate to AllCollegesPage
-        Future.delayed(const Duration(milliseconds: 500), () {
-          Get.offAll(() => AllCollegesPage()); // Changed this line
-        });
-      });
-    }
+  if (_formKey.currentState!.validate()) {
+    _submitCollegeEnquiry('FIEM'); // Change to 'MSIT' in msit.dart
   }
+}
+
 
   Widget _buildTextField(
     TextEditingController controller,
