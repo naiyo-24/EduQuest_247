@@ -1,17 +1,49 @@
-// ignore_for_file: unused_import
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:eduquest247/components/app_bar_dropdown.dart';
 import 'package:eduquest247/components/floating_nav_button.dart';
 import 'package:eduquest247/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-
 import 'package:eduquest247/components/standard_app_bar.dart';
 
-class NotificationsPage extends StatelessWidget {
+class NotificationsPage extends StatefulWidget {
   const NotificationsPage({super.key});
+
+  @override
+  _NotificationsPageState createState() => _NotificationsPageState();
+}
+
+class _NotificationsPageState extends State<NotificationsPage> {
+  List<Map<String, dynamic>> notifications = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchNotifications();
+  }
+
+  Future<void> _fetchNotifications() async {
+    final Uri apiUrl = Uri.parse('http://127.0.0.1:5000/api/notifications');
+
+    try {
+      final response = await http.get(apiUrl);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          notifications = List<Map<String, dynamic>>.from(data['notifications']);
+        });
+      } else {
+        Get.snackbar('Error', 'Failed to load notifications',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to fetch notifications: $e',
+          backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +71,19 @@ class NotificationsPage extends StatelessWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
             SliverPadding(
-              padding:
-                  const EdgeInsets.fromLTRB(16, 8, 16, 16), // Adjusted padding
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16), // Adjusted padding
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
-                    if (index == 0) return _buildPriorityNotification();
-                    if (index == 1) return _buildNewNotification();
-                    return _buildRegularNotification();
+                    final notification = notifications[index];
+                    return _buildNotificationCard(
+                      title: notification['title'],
+                      message: notification['message'],
+                      category: notification['category'],
+                      timestamp: notification['timestamp'],
+                    );
                   },
-                  childCount: 10,
+                  childCount: notifications.length,
                 ),
               ),
             ),
@@ -58,263 +93,75 @@ class NotificationsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildActionIcon(IconData icon, VoidCallback onPressed) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 2),
-      child: IconButton(
-        icon: Icon(icon, color: const Color.fromARGB(255, 0, 0, 0), size: 24),
-        padding: const EdgeInsets.all(8),
-        constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-        onPressed: onPressed,
-      ),
-    );
-  }
+  Widget _buildNotificationCard({
+    required String title,
+    required String message,
+    required String category,
+    required String timestamp,
+  }) {
+    Color categoryColor;
+    IconData icon;
 
-  Widget _buildPriorityNotification() {
+    switch (category) {
+      case 'Priority':
+        categoryColor = Colors.red;
+        icon = Icons.priority_high;
+        break;
+      case 'New':
+        categoryColor = Colors.blue;
+        icon = Icons.new_releases;
+        break;
+      default:
+        categoryColor = Colors.green;
+        icon = Icons.notifications;
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white, // Changed from black
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {},
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.black
-                        .withOpacity(0.1), // Changed to dark background
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(Icons.campaign,
-                      color: Colors.black, size: 24), // Changed to black
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Important Update!',
-                        style: GoogleFonts.openSans(
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Your loan application has been approved',
-                        style: GoogleFonts.openSans(
-                          color: const Color.fromARGB(255, 0, 0, 0)
-                              .withOpacity(0.9),
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '2 minutes ago',
-                        style: GoogleFonts.openSans(
-                          color: const Color.fromARGB(255, 0, 0, 0)
-                              .withOpacity(0.7),
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNewNotification() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white, // Changed from black
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
-        child: InkWell(
-          onTap: () {},
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.1), // Changed background
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(
-                    Icons.work_outline,
-                    color: Colors.black, // Changed to black
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Internship Available',
-                            style: GoogleFonts.openSans(
-                              color: const Color.fromARGB(255, 0, 0, 0),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 106, 105, 105)
-                                  .withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Software Development at Tech Corp',
-                        style: GoogleFonts.openSans(
-                          color: const Color.fromARGB(255, 0, 0, 0)
-                              .withOpacity(0.9),
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '1 hour ago',
-                        style: GoogleFonts.openSans(
-                          color: const Color.fromARGB(255, 0, 0, 0)
-                              .withOpacity(0.7),
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(16),
+        leading: CircleAvatar(
+          backgroundColor: categoryColor,
+          child: Icon(icon, color: Colors.white),
+        ),
+        title: Text(
+          title,
+          style: GoogleFonts.openSans(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildRegularNotification() {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: Colors.white, // Changed from black
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(16),
-        child: InkWell(
-          onTap: () {},
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.1), // Changed background
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.notifications_none,
-                    color: Colors.black, // Changed to black
-                    size: 24,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Regular Update',
-                        style: GoogleFonts.openSans(
-                          color: const Color.fromARGB(
-                              255, 0, 0, 0), // Changed from Color(0xFF333333)
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Check out our latest features and updates',
-                        style: GoogleFonts.openSans(
-                          color: const Color.fromARGB(255, 0, 0, 0)
-                              .withOpacity(0.7), // Changed from grey
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '2 days ago',
-                        style: GoogleFonts.openSans(
-                          color: const Color.fromARGB(255, 5, 5, 5),
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              message,
+              style: GoogleFonts.openSans(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
             ),
-          ),
+            const SizedBox(height: 4),
+            Text(
+              timestamp,
+              style: GoogleFonts.openSans(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+          ],
         ),
       ),
     );

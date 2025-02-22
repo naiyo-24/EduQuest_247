@@ -78,7 +78,7 @@ class SignUpPageState extends State<SignUpPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Signup and login successful!')),
         );
-        Get.offAll(() => const HomeScreen());
+        Get.offAll(() => HomeScreen());
       } else {
         setState(() => errorMessage = 'Login failed after signup.');
       }

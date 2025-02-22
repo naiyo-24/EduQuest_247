@@ -48,7 +48,7 @@ void _login(BuildContext context) async {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login successful!')),
       );
-      Get.offAll(() => const HomeScreen());
+      Get.offAll(() => HomeScreen());
     } else {
       final responseData = jsonDecode(response.body);
       setState(() => errorMessage = responseData['message']);

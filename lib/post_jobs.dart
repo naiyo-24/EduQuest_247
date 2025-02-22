@@ -3,11 +3,119 @@ import 'package:eduquest247/pages/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import 'package:eduquest247/components/standard_app_bar.dart';
 
-class PostJobsPage extends StatelessWidget {
+class PostJobsPage extends StatefulWidget {
   const PostJobsPage({super.key});
+
+  @override
+  _PostJobsPageState createState() => _PostJobsPageState();
+}
+
+class _PostJobsPageState extends State<PostJobsPage> {
+  final TextEditingController companyNameController = TextEditingController();
+  final TextEditingController jobTitleController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
+  final TextEditingController salaryRangeController = TextEditingController();
+  final TextEditingController experienceController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController requirementsController = TextEditingController();
+
+  List<Map<String, String>> _myPostedJobs = [];
+
+  @override
+  void dispose() {
+    companyNameController.dispose();
+    jobTitleController.dispose();
+    locationController.dispose();
+    salaryRangeController.dispose();
+    experienceController.dispose();
+    descriptionController.dispose();
+    requirementsController.dispose();
+    super.dispose();
+  }
+
+  void _fetchJobPosts() async {
+    final Uri apiUrl = Uri.parse('http://127.0.0.1:5000/api/job-posts');
+
+    try {
+      final response = await http.get(apiUrl);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        _myPostedJobs.clear();
+
+        for (var job in data['job_posts']) {
+          _myPostedJobs.add({
+            'title': job['job_title'],
+            'company': job['company_name'],
+            'salary': job['salary_range'],
+          });
+        }
+
+        setState(() {});  // Refresh UI with new job posts
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to load job posts: $e',
+          backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  }
+
+  void _postJob() async {
+    final String companyName = companyNameController.text.trim();
+    final String jobTitle = jobTitleController.text.trim();
+    final String location = locationController.text.trim();
+    final String salaryRange = salaryRangeController.text.trim();
+    final String experience = experienceController.text.trim();
+    final String description = descriptionController.text.trim();
+    final String requirements = requirementsController.text.trim();
+
+    if (companyName.isEmpty ||
+        jobTitle.isEmpty ||
+        location.isEmpty ||
+        salaryRange.isEmpty ||
+        experience.isEmpty ||
+        description.isEmpty ||
+        requirements.isEmpty) {
+      Get.snackbar('Error', 'All fields are required.',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return;
+    }
+
+    final Uri apiUrl = Uri.parse('http://127.0.0.1:5000/api/job-post');
+
+    try {
+      final response = await http.post(
+        apiUrl,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'companyName': companyName,
+          'jobTitle': jobTitle,
+          'location': location,
+          'salaryRange': salaryRange,
+          'experience': experience,
+          'description': description,
+          'requirements': requirements,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        Get.snackbar('Success', 'Job posted successfully!',
+            backgroundColor: Colors.green, colorText: Colors.white);
+        _fetchJobPosts(); // Refresh job posts
+      } else {
+        final responseData = jsonDecode(response.body);
+        Get.snackbar('Error', responseData['message'],
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to post job: $e',
+          backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,36 +220,43 @@ class PostJobsPage extends StatelessWidget {
           _buildStyledInputField(
             'Company Name',
             Icons.business,
+            controller: companyNameController,
             hint: 'Enter company name',
           ),
           _buildStyledInputField(
             'Job Title',
             Icons.work,
+            controller: jobTitleController,
             hint: 'Enter job title',
           ),
           _buildStyledInputField(
             'Location',
             Icons.location_on,
+            controller: locationController,
             hint: 'Enter job location',
           ),
           _buildStyledInputField(
             'Salary Range',
             Icons.attach_money,
+            controller: salaryRangeController,
             hint: 'Enter salary range',
           ),
           _buildStyledInputField(
             'Experience Required',
             Icons.timeline,
+            controller: experienceController,
             hint: 'Enter required experience',
           ),
           _buildStyledMultilineField(
             'Job Description',
             Icons.description,
+            controller: descriptionController,
             hint: 'Enter detailed job description',
           ),
           _buildStyledMultilineField(
             'Requirements',
             Icons.list,
+            controller: requirementsController,
             hint: 'Enter job requirements',
           ),
         ],
@@ -149,7 +264,7 @@ class PostJobsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStyledInputField(String label, IconData icon, {String? hint}) {
+  Widget _buildStyledInputField(String label, IconData icon, {required TextEditingController controller, String? hint}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -171,6 +286,7 @@ class PostJobsPage extends StatelessWidget {
               border: Border.all(color: Colors.grey[200]!),
             ),
             child: TextField(
+              controller: controller,
               decoration: InputDecoration(
                 hintText: hint,
                 hintStyle: GoogleFonts.openSans(
@@ -188,8 +304,7 @@ class PostJobsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStyledMultilineField(String label, IconData icon,
-      {String? hint}) {
+  Widget _buildStyledMultilineField(String label, IconData icon, {required TextEditingController controller, String? hint}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -211,6 +326,7 @@ class PostJobsPage extends StatelessWidget {
               border: Border.all(color: Colors.grey[200]!),
             ),
             child: TextField(
+              controller: controller,
               maxLines: 3,
               decoration: InputDecoration(
                 hintText: hint,
@@ -241,7 +357,7 @@ class PostJobsPage extends StatelessWidget {
         border: Border(top: BorderSide(color: Color.fromARGB(255, 135, 206, 235)!)),
       ),
       child: ElevatedButton(
-        onPressed: () => _handleSubmit(context),
+        onPressed: _postJob,
         style: ElevatedButton.styleFrom(
           backgroundColor: Color.fromARGB(255, 255, 255, 255),
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -446,23 +562,4 @@ class PostJobsPage extends StatelessWidget {
       ),
     );
   }
-
-  // Sample data for posted jobs
-  static final List<Map<String, String>> _myPostedJobs = [
-    {
-      'title': 'Senior Flutter Developer',
-      'company': 'Tech Solutions Inc.',
-      'salary': '\$80,000 - \$100,000',
-    },
-    {
-      'title': 'UI/UX Designer',
-      'company': 'Creative Studios',
-      'salary': '\$60,000 - \$75,000',
-    },
-    {
-      'title': 'Project Manager',
-      'company': 'Global Systems',
-      'salary': '\$90,000 - \$120,000',
-    },
-  ];
 }

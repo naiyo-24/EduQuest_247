@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import '../post_jobs.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HRLoginPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -151,18 +153,32 @@ class HRLoginPage extends StatelessWidget {
         ],
       ),
       child: ElevatedButton(
-        onPressed: () {
-          if (_formKey.currentState?.validate() ?? false) {
-            if (_emailController.text.contains('@') &&
-                _passwordController.text.length >= 6) {
-              Get.to(
-                () => const PostJobsPage(),
-                transition: Transition.fadeIn,
-                duration: const Duration(milliseconds: 300),
-              );
-            }
-          }
-        },
+onPressed: () async {
+  if (_formKey.currentState?.validate() ?? false) {
+    final Uri apiUrl = Uri.parse('http://127.0.0.1:5000/api/hr-login');
+    final response = await http.post(
+      apiUrl,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': _emailController.text.trim(),
+        'password': _passwordController.text.trim(),
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Get.to(
+        () => const PostJobsPage(),
+        transition: Transition.fadeIn,
+        duration: const Duration(milliseconds: 300),
+      );
+    } else {
+      final responseData = jsonDecode(response.body);
+      Get.snackbar('Error', responseData['message'],
+          backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  }
+},
+
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,

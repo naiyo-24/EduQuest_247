@@ -12,6 +12,25 @@ internship_applications = []  # Ensure this line is present
 job_applications = []  # Store job applications in memory
 scholarship_applications = []  # Store scholarship applications in memory
 college_enquiry_applications = []  # Store college enquiry applications in memory
+hr_users = {"hr@company.com": "password123"}  # Example HR login
+job_posts = []  # Store job posts in memory
+notifications = []  # Store notifications in memory
+user_profiles = {}  # Store user profiles by email
+news_articles = []
+@app.route('/api/news-articles', methods=['GET'])
+def get_news_articles():
+    articles = [
+        {
+            "title": "Azad Hind Diwas Celebration",
+            "description": "Celebrating the spirit of Azad Hind Diwas and its historical significance.",
+            "image": "https://static.toiimg.com/photo/118463088.cms",
+            "url": "https://www.linkedin.com/posts/ambalikabhat_azadhinddiwas-activity-7298726492891422720-Rx7G?utm_source=share&utm_medium=member_desktop&rcm=ACoAAFWy7sYBwGYWCK1MllCIZQfgF8kfrKUa9uk"
+        }
+    ]
+    return jsonify({"status": "Success", "articles": articles}), 200
+
+# Get News Articles Endpoint
+
 
 # Home Route
 @app.route('/')
@@ -210,6 +229,107 @@ def apply_college_enquiry():
 @app.route('/api/college-enquiry-applications', methods=['GET'])
 def get_college_enquiry_applications():
     return jsonify({"status": "Success", "applications": college_enquiry_applications}), 200
+
+# HR Login Endpoint
+@app.route('/api/hr-login', methods=['POST'])
+def hr_login():
+    data = request.json
+    email = data.get('email')
+    password = data.get('password')
+
+    if not all([email, password]):
+        return jsonify({"status": "Failed", "message": "Email and password are required"}), 400
+
+    if email in hr_users and hr_users[email] == password:
+        return jsonify({"status": "Success", "message": "HR login successful"}), 200
+
+    return jsonify({"status": "Failed", "message": "Invalid HR credentials"}), 401
+# Job Post Endpoint
+@app.route('/api/job-post', methods=['POST'])
+def post_job():
+    data = request.json
+    company_name = data.get('companyName')
+    job_title = data.get('jobTitle')
+    location = data.get('location')
+    salary_range = data.get('salaryRange')
+    experience = data.get('experience')
+    description = data.get('description')
+    requirements = data.get('requirements')
+
+    if not all([company_name, job_title, location, salary_range, experience, description, requirements]):
+        return jsonify({"status": "Failed", "message": "All fields are required"}), 400
+
+    job = {
+        "company_name": company_name,
+        "job_title": job_title,
+        "location": location,
+        "salary_range": salary_range,
+        "experience": experience,
+        "description": description,
+        "requirements": requirements
+    }
+
+    job_posts.append(job)
+
+    return jsonify({"status": "Success", "message": "Job posted successfully"}), 201
+# Get All Job Posts
+@app.route('/api/job-posts', methods=['GET'])
+def get_job_posts():
+    return jsonify({"status": "Success", "job_posts": job_posts}), 200
+
+# Push Notification Endpoint
+@app.route('/api/push-notification', methods=['POST'])
+def push_notification():
+    data = request.json
+    title = data.get('title')
+    message = data.get('message')
+    category = data.get('category')  # e.g., Priority, New, Regular
+
+    if not all([title, message, category]):
+        return jsonify({"status": "Failed", "message": "All fields are required"}), 400
+
+    notification = {
+        "title": title,
+        "message": message,
+        "category": category,
+        "timestamp": "Just now"
+    }
+
+    notifications.append(notification)
+
+    return jsonify({"status": "Success", "message": "Notification pushed successfully"}), 201
+# Get All Notifications
+@app.route('/api/notifications', methods=['GET'])
+def get_notifications():
+    return jsonify({"status": "Success", "notifications": notifications}), 200
+
+# Update Personal Information Endpoint
+@app.route('/api/update-profile', methods=['POST'])
+def update_profile():
+    data = request.json
+    full_name = data.get('fullName')
+    email = data.get('email')
+    phone = data.get('phone')
+    college = data.get('college')
+    degree = data.get('degree')
+
+    if not all([full_name, email, phone, college, degree]):
+        return jsonify({"status": "Failed", "message": "All fields are required"}), 400
+
+    # Store user profile by email
+    user_profiles[email] = {
+        "full_name": full_name,
+        "email": email,
+        "phone": phone,
+        "college": college,
+        "degree": degree
+    }
+
+    return jsonify({"status": "Success", "message": "Profile updated successfully"}), 200
+# Get All User Profiles
+@app.route('/api/user-profiles', methods=['GET'])
+def get_user_profiles():
+    return jsonify({"status": "Success", "profiles": list(user_profiles.values())}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

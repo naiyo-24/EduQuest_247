@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 import 'menu_bar.dart'; // Import MenuBar
 import 'package:flutter/material.dart';
@@ -42,8 +44,42 @@ class CustomStaticAppBar extends StatelessWidget implements PreferredSizeWidget 
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
-class MyAccountPage extends StatelessWidget {
+class MyAccountPage extends StatefulWidget {
   const MyAccountPage({super.key});
+
+  @override
+  _MyAccountPageState createState() => _MyAccountPageState();
+}
+
+class _MyAccountPageState extends State<MyAccountPage> {
+  Map<String, dynamic> userProfile = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserProfile();
+  }
+
+  Future<void> _fetchUserProfile() async {
+    final Uri apiUrl = Uri.parse('http://127.0.0.1:5000/api/user-profiles');
+
+    try {
+      final response = await http.get(apiUrl);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          userProfile = data['profiles'].isNotEmpty ? data['profiles'][0] : {};
+        });
+      } else {
+        Get.snackbar('Error', 'Failed to load user profile',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to fetch user profile: $e',
+          backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +141,7 @@ class MyAccountPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Rajdeep Dey', // Replace with actual user name
+                    userProfile['full_name'] ?? 'Rajdeep Dey', // Replace with actual user name
                     style: GoogleFonts.openSans(
                       color: Colors.black,
                       fontSize: 24,
@@ -113,7 +149,7 @@ class MyAccountPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'deyrajdeep201@gmail.com', // Replace with actual user email
+                    userProfile['email'] ?? 'deyrajdeep201@gmail.com', // Replace with actual user email
                     style: GoogleFonts.openSans(
                       color: Colors.grey[800],
                       fontSize: 16,
@@ -141,7 +177,7 @@ class MyAccountPage extends StatelessWidget {
                       'icon': Icons.person_outline,
                       'title': 'Personal Information',
                       'subtitle': 'Update your personal details',
-                      'onTap': () => Get.to(() => const PersonalInfoForm()),
+                      'onTap': () => Get.to(() => PersonalInfoForm(userProfile: userProfile)),
                     },
                   ),
                   _buildProfileOption(
@@ -184,7 +220,6 @@ class MyAccountPage extends StatelessWidget {
           ],
         ),
       ),
-  
     );
   }
 
@@ -258,7 +293,9 @@ class MyAccountPage extends StatelessWidget {
 }
 
 class PersonalInfoForm extends StatefulWidget {
-  const PersonalInfoForm({super.key});
+  final Map<String, dynamic> userProfile;
+
+  const PersonalInfoForm({required this.userProfile, super.key});
 
   @override
   State<PersonalInfoForm> createState() => _PersonalInfoFormState();
@@ -269,6 +306,11 @@ class _PersonalInfoFormState extends State<PersonalInfoForm>
   final _formKey = GlobalKey<FormState>();
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  late TextEditingController fullNameController;
+  late TextEditingController emailController;
+  late TextEditingController phoneController;
+  late TextEditingController collegeController;
+  late TextEditingController degreeController;
 
   @override
   void initState() {
@@ -281,15 +323,26 @@ class _PersonalInfoFormState extends State<PersonalInfoForm>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
     _animationController.forward();
+
+    fullNameController = TextEditingController(text: widget.userProfile['full_name']);
+    emailController = TextEditingController(text: widget.userProfile['email']);
+    phoneController = TextEditingController(text: widget.userProfile['phone']);
+    collegeController = TextEditingController(text: widget.userProfile['college']);
+    degreeController = TextEditingController(text: widget.userProfile['degree']);
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    fullNameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    collegeController.dispose();
+    degreeController.dispose();
     super.dispose();
   }
 
-  Widget _buildTextField(String label, IconData icon, {int maxLines = 1}) {
+  Widget _buildTextField(String label, IconData icon, {int maxLines = 1, required TextEditingController controller}) {
     return FadeTransition(
       opacity: _fadeAnimation,
       child: Container(
@@ -314,6 +367,7 @@ class _PersonalInfoFormState extends State<PersonalInfoForm>
                 borderRadius: BorderRadius.circular(16),
               ),
               child: TextFormField(
+                controller: controller,
                 maxLines: maxLines,
                 style: GoogleFonts.openSans(
                   fontSize: 15,
@@ -342,7 +396,7 @@ class _PersonalInfoFormState extends State<PersonalInfoForm>
                   contentPadding: const EdgeInsets.all(8),
                 ),
                 validator: (value) =>
-                    value?.isEmpty ?? true ? '${label} is required' : null,
+                    value?.isEmpty ?? true ? '$label is required' : null,
               ),
             ),
           ],
@@ -351,46 +405,42 @@ class _PersonalInfoFormState extends State<PersonalInfoForm>
     );
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      // Show loading indicator
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return Center(
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 0, 0, 0),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const CircularProgressIndicator(),
-            ),
-          );
-        },
-      );
+      final String fullName = fullNameController.text.trim();
+      final String email = emailController.text.trim();
+      final String phone = phoneController.text.trim();
+      final String college = collegeController.text.trim();
+      final String degree = degreeController.text.trim();
 
-      // Simulate API call with delay
-      Future.delayed(const Duration(seconds: 1), () {
-        Navigator.pop(context); // Remove loading indicator
+      final Uri apiUrl = Uri.parse('http://127.0.0.1:5000/api/update-profile');
 
-        Get.snackbar(
-          'Success',
-          'Profile updated successfully',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: const Color(0xFF1872db),
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(16),
-          borderRadius: 16,
-          duration: const Duration(seconds: 3),
+      try {
+        final response = await http.post(
+          apiUrl,
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'fullName': fullName,
+            'email': email,
+            'phone': phone,
+            'college': college,
+            'degree': degree,
+          }),
         );
 
-        // Direct navigation to MyAccountPage
-        Future.delayed(const Duration(seconds: 1), () {
-          Get.off(() => MyAccountPage());
-        });
-      });
+        if (response.statusCode == 200) {
+          Get.snackbar('Success', 'Profile updated successfully.',
+              backgroundColor: Colors.green, colorText: Colors.white);
+          Get.off(() => const MyAccountPage());
+        } else {
+          final responseData = jsonDecode(response.body);
+          Get.snackbar('Error', responseData['message'],
+              backgroundColor: Colors.red, colorText: Colors.white);
+        }
+      } catch (e) {
+        Get.snackbar('Error', 'Failed to update profile: $e',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
     }
   }
 
@@ -405,8 +455,7 @@ class _PersonalInfoFormState extends State<PersonalInfoForm>
             icon: const Icon(Icons.check, color: Color.fromARGB(255, 4, 4, 4)),
             onPressed: () {
               if (_formKey.currentState!.validate()) {
-                // Save form data
-                Get.back();
+                _submitForm();
               }
             },
           ),
@@ -428,15 +477,13 @@ class _PersonalInfoFormState extends State<PersonalInfoForm>
             children: [
               const SizedBox(height: 32),
               _buildFormSection('Personal Information', [
-                _buildTextField('Full Name', Icons.person_outline),
-                _buildTextField('Phone Number', Icons.phone_outlined),
-                _buildTextField('Email Address', Icons.email_outlined),
+                _buildTextField('Full Name', Icons.person_outline, controller: fullNameController),
+                _buildTextField('Phone Number', Icons.phone_outlined, controller: phoneController),
+                _buildTextField('Email Address', Icons.email_outlined, controller: emailController),
+                _buildTextField('College/University', Icons.school_outlined, controller: collegeController),
+                _buildTextField('Degree', Icons.history_edu, controller: degreeController),
               ]),
               _buildDivider(),
-              _buildFormSection('Academic Details', [
-                _buildTextField('College/University', Icons.school_outlined),
-                _buildTextField('Degree', Icons.history_edu),
-              ]),
               const SizedBox(height: 32),
               _buildSubmitButton(),
             ],

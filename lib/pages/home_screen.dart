@@ -7,6 +7,9 @@ import 'package:eduquest247/hr/hr_login_page.dart';
 import 'package:eduquest247/components/standard_app_bar.dart';
 
 // ignore:
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:eduquest247/jobs_posted.dart';
 import 'package:eduquest247/loans.dart';
@@ -20,14 +23,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:confetti/confetti.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:eduquest247/post_jobs.dart';
 import 'package:eduquest247/scholarships/scholarship.dart';
 import 'package:eduquest247/components/app_bar_dropdown.dart';
 import 'package:flutter/animation.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -38,11 +40,12 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late Animation<double> _arrowAnimation;
   final PageController _pageController = PageController();
   bool _isLoadingMore = false;
+  bool _isLoading = true;
+  List<Map<String, String>> newsArticles = [];
 
   @override
   void initState() {
     super.initState();
-
     _arrowAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1000),
@@ -53,9 +56,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       end: 1,
     ).animate(_arrowAnimationController);
 
-    if (newsArticles.isEmpty) {
-      loadMoreArticles();
-    }
+    _fetchNewsArticles();
 
     _pageController.addListener(() {
       if (_pageController.position.pixels >=
@@ -66,6 +67,39 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
   }
 
+  Future<void> _fetchNewsArticles() async {
+    final Uri apiUrl = Uri.parse('http://127.0.0.1:5000/api/news-articles');
+
+    try {
+      final response = await http.get(apiUrl);
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = jsonDecode(response.body);
+        final List<dynamic> articles = data['articles'];
+
+        setState(() {
+          newsArticles = articles.map((article) {
+            return {
+              'title': article['title']?.toString() ?? 'No Title',
+              'description': article['description']?.toString() ?? 'No Description',
+              'image': article['image']?.toString() ?? '',
+              'url': article['url']?.toString() ?? '',
+            };
+          }).toList();
+          _isLoading = false;
+        });
+      } else {
+        setState(() => _isLoading = false);
+        Get.snackbar('Error', 'Failed to load news articles',
+            backgroundColor: Colors.red, colorText: Colors.white);
+      }
+    } catch (e) {
+      setState(() => _isLoading = false);
+      Get.snackbar('Error', 'Failed to fetch news: $e',
+          backgroundColor: Colors.red, colorText: Colors.white);
+    }
+  }
+
   void _loadMore() async {
     if (_isLoadingMore) return;
 
@@ -74,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     });
 
     await Future.delayed(const Duration(milliseconds: 100));
-    loadMoreArticles();
+    // Load more articles logic here
 
     setState(() {
       _isLoadingMore = false;
@@ -86,144 +120,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _pageController.dispose();
     _arrowAnimationController.dispose();
     super.dispose();
-  }
-
-  static final confettiController =
-      ConfettiController(duration: const Duration(seconds: 1));
-  static final scrollController = ScrollController();
-  static final collegeScrollController = ScrollController();
-  static final RxBool isLoadingMore = false.obs;
-  static final RxBool isLoadingMoreColleges = false.obs;
-  static final RxInt selectedIndex = 0.obs;
-
-  static final RxList<Map<String, String>> newsArticles =
-      <Map<String, String>>[].obs;
-  static int _currentArticleIndex = 0;
-
-  static Map<String, String> _generateArticle(int index) {
-    final images = [
-      'assets/images/bg1.png',
-      'assets/images/picture12.jpg',
-      'assets/images/picture1234.jpg',
-      'assets/images/college1.jpg'
-      'assets/images/dig_market.jpg'
-      'assets/images/profile.jpeg'
-    ];
-
-    final titles = [
-      "AI Advancement in Education",
-      "Global Economic Trends",
-      "Technology Innovation",
-      "Educational Reform",
-      "Career Development",
-      "Industry Updates"
-    ];
-
-    final descriptions = [
-      "Exploring the latest developments in artificial intelligence and its impact on various sectors.",
-      "Analyzing current market trends and their implications for future growth.",
-      "Discovering breakthrough technologies that are reshaping our world.",
-      "Understanding changes in educational systems worldwide.",
-      "Finding new opportunities in the evolving job market.",
-      "Keeping up with industry changes and innovations."
-    ];
-
-    return {
-      "image": images[index % images.length],
-      "title": "News Article ${index + 1}: ${titles[index % titles.length]}",
-      "description":
-          "This is article ${index + 1} of our comprehensive coverage. ${descriptions[index % descriptions.length]}",
-    };
-  }
-
-  static void loadMoreArticles() {
-    final batch = List.generate(
-        10, (index) => _generateArticle(_currentArticleIndex + index));
-    newsArticles.addAll(batch);
-    _currentArticleIndex += 10;
-  }
-
-  static final RxList<Map<String, String>> colleges = [
-    {
-      "name": 'Future Institute of Engineering and Management',
-      "package": 'Packages starting from \$40,000',
-      "location": 'Kolkata, India',
-      "description":
-          'A premier institute offering a variety of engineering and management courses.',
-    },
-    {
-      "name": 'Meghnad Saha Institute of Technology',
-      "package": 'Packages starting from \$42,000',
-      "location": 'Kolkata, India',
-      "description":
-          'Known for its excellent faculty and state-of-the-art infrastructure.',
-    },
-    // Add more initial colleges here
-  ].obs;
-
-  static void launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
-
-  static void loadMoreColleges() {
-    if (!isLoadingMoreColleges.value) {
-      isLoadingMoreColleges.value = true;
-      Future.delayed(const Duration(seconds: 2), () {
-        colleges.addAll([
-          {
-            "name": 'New College 1',
-            "package": 'Packages starting from \$45,000',
-            "location": 'City, Country',
-          },
-          // Add more colleges here
-        ]);
-        isLoadingMoreColleges.value = false;
-      });
-    }
-  }
-
-  void _onItemTapped(int index) {
-    switch (index) {
-      case 0:
-        Get.offAll(
-          () => HomeScreen(),
-          transition: Transition.fadeIn,
-          duration: const Duration(milliseconds: 20),
-        );
-        break;
-      case 1:
-        Get.to(
-          () => LoanPage(),
-          transition: Transition.fadeIn,
-          duration: const Duration(milliseconds: 20),
-        );
-        break;
-      case 2:
-        Get.to(
-          () => ViewAllInternshipsPage(),
-          transition: Transition.fadeIn,
-          duration: const Duration(milliseconds: 20),
-        );
-        break;
-      case 3:
-        Get.to(
-          () => JobsPostedPage(),
-          transition: Transition.fadeIn,
-          duration: const Duration(milliseconds: 20),
-        );
-        break;
-      case 4:
-        Get.to(
-          () => const PostJobsPage(),
-          transition: Transition.fadeIn,
-          duration: const Duration(milliseconds: 20),
-        );
-        break;
-    }
   }
 
   @override
@@ -266,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         logoimageUrl:
                             "https://upload.wikimedia.org/wikipedia/sco/thumb/b/bf/KFC_logo.svg/1024px-KFC_logo.svg.png",
                         onPressed: () {
-                          launchURL('https://www.kfc.com/');
+                          launchUrl(Uri.parse('https://www.kfc.com/'));
                         },
                       ),
                       CarouselItem(
@@ -277,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         logoimageUrl:
                             "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/1200px-Starbucks_Corporation_Logo_2011.svg.png",
                         onPressed: () {
-                          launchURL('https://www.starbucks.com/');
+                          launchUrl(Uri.parse('https://www.starbucks.com/'));
                         },
                       ),
                     ],
@@ -291,134 +187,140 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
                 // News Section - Rest of the space
                 Expanded(
-                  child: PageView.builder(
-                    controller: _pageController,
-                    scrollDirection: Axis.vertical,
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      if (index >= newsArticles.length - 1) {
-                        _loadMore();
-                      }
-                      final article = newsArticles[index % newsArticles.length];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NewsDetailPage(
-                                article: article,
-                              ),
-                            ),
-                          );
-                        },
-                        child: Stack(
-                          children: [
-                            Container(
-                              margin: EdgeInsets.zero,
-                              decoration: const BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [Color.fromARGB(255, 253, 254, 254), Color(0xFF87CEEB)],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(16),
-                                  topRight: Radius.circular(16),
-                                ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                  child: _isLoading
+                      ? Center(child: CircularProgressIndicator())
+                      : PageView.builder(
+                          controller: _pageController,
+                          scrollDirection: Axis.vertical,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: newsArticles.length,
+                          itemBuilder: (context, index) {
+                            final article = newsArticles[index];
+                            return GestureDetector(
+                              onTap: () async {
+                                final url = article["url"]!;
+                                if (await canLaunch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              child: Stack(
                                 children: [
-                                  // Image at the extreme top of the container with rounded corners
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(16),
-                                      topRight: Radius.circular(16),
+                                  Container(
+                                    margin: EdgeInsets.zero,
+                                    decoration: const BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [Color.fromARGB(255, 253, 254, 254), Color(0xFF87CEEB)],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                      ),
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(16),
+                                        topRight: Radius.circular(16),
+                                      ),
                                     ),
-                                    child: Image.asset(
-                                      article["image"]!,
-                                      fit: BoxFit.cover,
-                                      height: 200, // Adjust the height as needed
-                                      width: double.infinity,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 16),
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        Column(
-                                          children: [
-                                            FadeTransition(
-                                              opacity: _arrowAnimation,
-                                              child: const Icon(
-                                                Icons.keyboard_arrow_up,
-                                                color: Color.fromARGB(255, 0, 0, 0),
-                                                size: 24,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 2),
-                                            Text(
-                                              'Swipe up for more',
-                                              style: GoogleFonts.jaldi(
-                                                fontSize: 16,
-                                                color:
-                                                    const Color.fromARGB(255, 0, 0, 0).withOpacity(0.8),
-                                                letterSpacing: 0.5,
-                                              ),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                article["title"]!,
-                                                style: GoogleFonts.openSans(
-                                                  fontSize: 34,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: const Color.fromARGB(255, 0, 0, 0),
-                                                ),
-                                                maxLines: 3,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            IconButton(
-                                              icon: const Icon(Icons.share,
-                                                  color: Color.fromARGB(255, 0, 0, 0)),
-                                              onPressed: () {
-                                                // Add share functionality
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          article["description"]!,
-                                          style: GoogleFonts.jaldi(
-                                            fontSize: 20,
-                                            color: const Color.fromARGB(255, 1, 1, 1).withOpacity(0.9),
-                                            height: 1.5,
+                                        // Image at the extreme top of the container with rounded corners
+                                        ClipRRect(
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(16),
+                                            topRight: Radius.circular(16),
                                           ),
-                                          maxLines: 4,
-                                                overflow: TextOverflow.ellipsis,
+                                          child: Image.network(
+                                            article["image"]!,
+                                            fit: BoxFit.cover,
+                                            height: 200, // Adjust the height as needed
+                                            width: double.infinity,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Image.asset(
+                                                'assets/images/placeholder.png',
+                                                fit: BoxFit.cover,
+                                                height: 200,
+                                                width: double.infinity,
+                                              );
+                                            },
+                                          ),
                                         ),
-                                        const SizedBox(height: 26),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 16),
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Column(
+                                                children: [
+                                                  FadeTransition(
+                                                    opacity: _arrowAnimation,
+                                                    child: const Icon(
+                                                      Icons.keyboard_arrow_up,
+                                                      color: Color.fromARGB(255, 0, 0, 0),
+                                                      size: 24,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 2),
+                                                  Text(
+                                                    'Swipe up for more',
+                                                    style: GoogleFonts.jaldi(
+                                                      fontSize: 16,
+                                                      color:
+                                                          const Color.fromARGB(255, 0, 0, 0).withOpacity(0.8),
+                                                      letterSpacing: 0.5,
+                                                    ),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      article["title"]!,
+                                                      style: GoogleFonts.openSans(
+                                                        fontSize: 34,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: const Color.fromARGB(255, 0, 0, 0),
+                                                      ),
+                                                      maxLines: 3,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    icon: const Icon(Icons.share,
+                                                        color: Color.fromARGB(255, 0, 0, 0)),
+                                                    onPressed: () {
+                                                      // Add share functionality
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 2),
+                                              Text(
+                                                article["description"]!,
+                                                style: GoogleFonts.jaldi(
+                                                  fontSize: 20,
+                                                  color: const Color.fromARGB(255, 1, 1, 1).withOpacity(0.9),
+                                                  height: 1.5,
+                                                ),
+                                                maxLines: 4,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              const SizedBox(height: 26),
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
                 ),
               ],
             ),
@@ -486,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             logoimageUrl:
                 "https://upload.wikimedia.org/wikipedia/sco/thumb/b/bf/KFC_logo.svg/1024px-KFC_logo.svg.png",
             onPressed: () {
-              launchURL('https://www.kfc.com/');
+              launchUrl(Uri.parse('https://www.kfc.com/'));
             },
           ),
           CarouselItem(
@@ -497,7 +399,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             logoimageUrl:
                 "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/1200px-Starbucks_Corporation_Logo_2011.svg.png",
             onPressed: () {
-              launchURL('https://www.starbucks.com/');
+              launchUrl(Uri.parse('https://www.starbucks.com/'));
             },
           ),
           CarouselItem(
@@ -507,7 +409,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             logoimageUrl:
                 "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/1200px-Starbucks_Corporation_Logo_2011.svg.png",
             onPressed: () {
-              launchURL('https://www.webinar.com/');
+              launchUrl(Uri.parse('https://www.webinar.com/'));
             },
             buttonText: 'Register Now',
           ),
@@ -582,7 +484,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -593,7 +495,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
         close(context, '');
       },
@@ -604,7 +506,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     // Implement your search results here
     return Center(
-      child: Text('Search results for: $query', selectionColor: Color.fromARGB(0, 0, 0, 0),),
+      child: Text('Search results for: $query', style: const TextStyle(color: Colors.black)),
     );
   }
 
@@ -612,7 +514,9 @@ class CustomSearchDelegate extends SearchDelegate<String> {
   Widget buildSuggestions(BuildContext context) {
     // Implement your search suggestions here
     return Center(
-      child: Text('Type to search colleges, courses...', selectionColor: Color.fromARGB(0, 0, 0, 0),),
+      child: Text('Type to search colleges, courses...', style: const TextStyle(color: Colors.black)),
     );
   }
 }
+
+
